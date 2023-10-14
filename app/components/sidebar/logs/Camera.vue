@@ -8,6 +8,23 @@
 import Vue from "vue";
 import { makeFullUrl } from "../../../store";
 
+var rnd = 0;
+const cameraSocket = new WebSocket("ws://localhost:5001");//connects to websocket in shepherd websocks.py
+// Connection opened
+cameraSocket.addEventListener("open", (event) => {
+  console.log("Connected to camera websocket.")//acknowledge connection to the websocket
+});
+
+/*
+// Listen for messages
+cameraSocket.addEventListener("message", (event) => {
+  if (event.data == 'Camera updated') {
+    rnd++;
+    console.log("Camera updated.");
+    export default {data() { return {newimgurl: imgurl + rnd}}};
+  }
+});
+*/
 
 export default {
 
@@ -15,26 +32,24 @@ export default {
   data () {
     return {
       url: makeFullUrl("/static/image.jpg"),
-      cacheKey: +new Date(),
+      cacheKey: rnd,
     }
   },
 
   mounted: function () {
-    this.interval = window.setInterval(() => {
-      try {
-        this.cacheKey = +new Date();
-      } catch(e) {
-        console.log(e);
+    cameraSocket.addEventListener("message", (event) => {//upon message received
+      if (event.data == 'Camera updated') {
+        rnd++;//change ?rnd= attribute of url to trick browsers into reloading the image
+        console.log("Camera updated.");
       }
-    }, 1000)
-  },
+    });
+    },
 
-  destroyed() {
-    clearInterval(this.interval);
+  destroyed() {//on websocket disconnected
+    cameraSocket.close();
   },
 
 }
-
 </script>
 
 <style lang="scss">
