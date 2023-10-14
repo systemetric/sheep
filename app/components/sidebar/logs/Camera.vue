@@ -10,7 +10,7 @@ import { makeFullUrl } from "../../../store";
 
 var rnd = 0;
 //which IP should I use instead of localhost..?
-const cameraSocket = new WebSocket("ws://localhost:5001");//connects to websocket in shepherd websocks.py
+const cameraSocket = new WebSocket("ws://robot.go:5001");//connects to websocket in shepherd websocks.py
 // Connection opened
 cameraSocket.addEventListener("open", (event) => {
   console.log("Connected to camera websocket.")//acknowledge connection to the websocket
