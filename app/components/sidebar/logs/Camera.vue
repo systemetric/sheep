@@ -38,10 +38,8 @@ export default {
 
   mounted: function () {
     cameraSocket.addEventListener("message", (event) => {//upon message received
-      if (event.data == 'Camera updated') {
-        rnd++;//change ?rnd= attribute of url to trick browsers into reloading the image
-        console.log("Camera updated.");
-      }
+      this.cacheKey++;//change ?rnd= attribute of url to trick browsers into reloading the image
+      console.log("Received: "+event.data);
     });
     },
 
