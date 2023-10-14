@@ -9,6 +9,7 @@ import Vue from "vue";
 import { makeFullUrl } from "../../../store";
 
 var rnd = 0;
+//which IP should I use instead of localhost..?
 const cameraSocket = new WebSocket("ws://localhost:5001");//connects to websocket in shepherd websocks.py
 // Connection opened
 cameraSocket.addEventListener("open", (event) => {
