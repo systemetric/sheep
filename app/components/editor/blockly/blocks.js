@@ -120,7 +120,7 @@ function loadMovementBlocks(Blockly) {
 
   Blockly.Blocks["zone"] = {
     init: function() {
-      this.appendDummyInput().appendField("Zone");
+      this.appendDummyInput().appendField("Own Team");
       this.setOutput(true, null);
       this.setColour(movementHue);
       this.setTooltip("");
@@ -315,37 +315,58 @@ function loadVisionMarkerBlocks(Blockly) {
       this.setHelpUrl("");
     }
   };
-  Blockly.Blocks["vision_marker_type_winkie"] = {
+
+  Blockly.Blocks["vision_marker_type_potato"] = {
     init: function() {
-      this.appendDummyInput().appendField("Winkie");
+      this.appendDummyInput().appendField("Potato");
       this.setOutput(true, "MarkerType");
       this.setColour(markerTypeHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
   };
-  Blockly.Blocks["vision_marker_type_gillikin"] = {
+
+  Blockly.Blocks["vision_marker_team_hot_potato"] = {
     init: function() {
-      this.appendDummyInput().appendField("Gillikin");
-      this.setOutput(true, "MarkerType");
+      this.appendDummyInput().appendField("Hot Potato");
+      this.setOutput(true, "MarkerTeam");
       this.setColour(markerTypeHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
   };
-  Blockly.Blocks["vision_marker_type_quadling"] = {
+
+  Blockly.Blocks["vision_marker_team_russet"] = {
     init: function() {
-      this.appendDummyInput().appendField("Quadling");
-      this.setOutput(true, "MarkerType");
+      this.appendDummyInput().appendField("Russet");
+      this.setOutput(true, "MarkerTeam");
       this.setColour(markerTypeHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
   };
-  Blockly.Blocks["vision_marker_type_munchkin"] = {
+  Blockly.Blocks["vision_marker_team_sweet"] = {
     init: function() {
-      this.appendDummyInput().appendField("Munchkin");
-      this.setOutput(true, "MarkerType");
+      this.appendDummyInput().appendField("Sweet");
+      this.setOutput(true, "MarkerTeam");
+      this.setColour(markerTypeHue);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    }
+  };
+  Blockly.Blocks["vision_marker_team_maris_piper"] = {
+    init: function() {
+      this.appendDummyInput().appendField("Maris Piper");
+      this.setOutput(true, "MarkerTeam");
+      this.setColour(markerTypeHue);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    }
+  };
+  Blockly.Blocks["vision_marker_team_purple"] = {
+    init: function() {
+      this.appendDummyInput().appendField("Purple");
+      this.setOutput(true, "MarkerTeam");
       this.setColour(markerTypeHue);
       this.setTooltip("");
       this.setHelpUrl("");
@@ -356,20 +377,30 @@ function loadVisionMarkerBlocks(Blockly) {
     const code = "MARKER_ARENA";
     return [code, Blockly.Python.ORDER_NONE];
   };
-  Blockly.Python["vision_marker_type_winkie"] = function() {
-    const code = "MARKER_CUBE_WINKIE";
+  Blockly.Python["vision_marker_type_potato"] = function() {
+    const code = "MARKER_POTATO";
     return [code, Blockly.Python.ORDER_NONE];
   };
-  Blockly.Python["vision_marker_type_gillikin"] = function() {
-    const code = "MARKER_CUBE_GILLIKIN";
+
+  Blockly.Python["vision_marker_team_hot_potato"] = function() {
+    const code = "MARKER_CUBE_HOT_POTATO";
     return [code, Blockly.Python.ORDER_NONE];
   };
-  Blockly.Python["vision_marker_type_quadling"] = function() {
-    const code = "MARKER_CUBE_QUADLING";
+  
+  Blockly.Python["vision_marker_team_russet"] = function() {
+    const code = "MARKER_CUBE_RUSSET";
     return [code, Blockly.Python.ORDER_NONE];
   };
-  Blockly.Python["vision_marker_type_munchkin"] = function() {
-    const code = "MARKER_CUBE_MUNCHKIN";
+  Blockly.Python["vision_marker_team_sweet"] = function() {
+    const code = "MARKER_CUBE_SWEET";
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  Blockly.Python["vision_marker_team_maris_piper"] = function() {
+    const code = "MARKER_CUBE_MARIS_PIPER";
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  Blockly.Python["vision_marker_team_purple"] = function() {
+    const code = "MARKER_CUBE_PURPLE";
     return [code, Blockly.Python.ORDER_NONE];
   };
 }
@@ -450,6 +481,19 @@ function loadVisionBlocks(Blockly) {
     }
   };
 
+  Blockly.Blocks["vision_marker_team"] = {
+    init: function() {
+      this.appendValueInput("MARKER")
+        .setCheck("Marker")
+        .appendField("Marker team of");
+      this.setInputsInline(false);
+      this.setOutput(true, "MarkerTeam");
+      this.setColour(markerTypeHue);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    }
+  };
+
   Blockly.Python["vision_see"] = function(block) {
     const code = `R.see()`;
     return [code, Blockly.Python.ORDER_NONE];
@@ -490,6 +534,15 @@ function loadVisionBlocks(Blockly) {
     return [code, Blockly.Python.ORDER_NONE];
   };
 
+  Blockly.Python["vision_marker_team"] = function(block) {
+    const value_marker = Blockly.Python.valueToCode(
+      block,
+      "MARKER",
+      Blockly.Python.ORDER_ATOMIC
+    );
+    const code = `${value_marker}.info.team`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
   // Load marker blocks. These may change for different competitions. 
   loadVisionMarkerBlocks(Blockly);
 }

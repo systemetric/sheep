@@ -79,6 +79,10 @@ import time
 R = Robot()
 
 ${Blockly.Python.workspaceToCode(this.workspace)}
+
+#Waits 5 seconds until stopping
+#Press stop early to stop the robot
+time.sleep(5)
 `;
 
       if (this.saveTimeout) clearTimeout(this.saveTimeout);
