@@ -4,6 +4,7 @@ const movementHue = 0;
 const gpioHue = 210;
 const visionHue = 90;
 const markerTypeHue = 70;
+const markerTeamHue = 40;
 
 function loadMovementBlocks(Blockly) {
   Blockly.Blocks["motors_set_power"] = {
@@ -330,7 +331,7 @@ function loadVisionMarkerBlocks(Blockly) {
     init: function() {
       this.appendDummyInput().appendField("Hot Potato");
       this.setOutput(true, "MarkerTeam");
-      this.setColour(markerTypeHue);
+      this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
@@ -340,7 +341,7 @@ function loadVisionMarkerBlocks(Blockly) {
     init: function() {
       this.appendDummyInput().appendField("Russet");
       this.setOutput(true, "MarkerTeam");
-      this.setColour(markerTypeHue);
+      this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
@@ -349,7 +350,7 @@ function loadVisionMarkerBlocks(Blockly) {
     init: function() {
       this.appendDummyInput().appendField("Sweet");
       this.setOutput(true, "MarkerTeam");
-      this.setColour(markerTypeHue);
+      this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
@@ -358,7 +359,7 @@ function loadVisionMarkerBlocks(Blockly) {
     init: function() {
       this.appendDummyInput().appendField("Maris Piper");
       this.setOutput(true, "MarkerTeam");
-      this.setColour(markerTypeHue);
+      this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
@@ -367,7 +368,7 @@ function loadVisionMarkerBlocks(Blockly) {
     init: function() {
       this.appendDummyInput().appendField("Purple");
       this.setOutput(true, "MarkerTeam");
-      this.setColour(markerTypeHue);
+      this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
@@ -488,7 +489,7 @@ function loadVisionBlocks(Blockly) {
         .appendField("Marker team of");
       this.setInputsInline(false);
       this.setOutput(true, "MarkerTeam");
-      this.setColour(markerTypeHue);
+      this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
