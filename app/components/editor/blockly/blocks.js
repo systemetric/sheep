@@ -1,10 +1,9 @@
-
 // Block colours use HSL. setColor takes the hue value (0 to 255). 
 const movementHue = 0;
 const gpioHue = 210;
 const visionHue = 90;
 const markerTypeHue = 70;
-const markerTeamHue = 40;
+const markerTeamHue = 60;
 
 function loadMovementBlocks(Blockly) {
   Blockly.Blocks["motors_set_power"] = {
@@ -375,33 +374,34 @@ function loadVisionMarkerBlocks(Blockly) {
   };
 
   Blockly.Python["vision_marker_type_arena"] = function() {
-    const code = "MARKER_ARENA";
+    const code = "robot.MARKER_TYPE.ARENA";
     return [code, Blockly.Python.ORDER_NONE];
   };
   Blockly.Python["vision_marker_type_potato"] = function() {
-    const code = "MARKER_POTATO";
+    const code = "robot.MARKER_TYPE.POTATO";
     return [code, Blockly.Python.ORDER_NONE];
   };
 
   Blockly.Python["vision_marker_team_hot_potato"] = function() {
-    const code = "MARKER_CUBE_HOT_POTATO";
+    const code = "robot.TEAM.ARENA";
     return [code, Blockly.Python.ORDER_NONE];
   };
   
   Blockly.Python["vision_marker_team_russet"] = function() {
-    const code = "MARKER_CUBE_RUSSET";
+    //const code = "MARKER_CUBE_RUSSET";
+    const code = "robot.TEAM.RUSSET";
     return [code, Blockly.Python.ORDER_NONE];
   };
   Blockly.Python["vision_marker_team_sweet"] = function() {
-    const code = "MARKER_CUBE_SWEET";
+    const code = "robot.TEAM.SWEET";
     return [code, Blockly.Python.ORDER_NONE];
   };
   Blockly.Python["vision_marker_team_maris_piper"] = function() {
-    const code = "MARKER_CUBE_MARIS_PIPER";
+    const code = "robot.TEAM.MARIS_PIPER";
     return [code, Blockly.Python.ORDER_NONE];
   };
   Blockly.Python["vision_marker_team_purple"] = function() {
-    const code = "MARKER_CUBE_PURPLE";
+    const code = "robot.TEAM.PURPLE";
     return [code, Blockly.Python.ORDER_NONE];
   };
 }
@@ -541,7 +541,7 @@ function loadVisionBlocks(Blockly) {
       "MARKER",
       Blockly.Python.ORDER_ATOMIC
     );
-    const code = `${value_marker}.info.team`;
+    const code = `${value_marker}.info.owning_team`;
     return [code, Blockly.Python.ORDER_NONE];
   };
   // Load marker blocks. These may change for different competitions. 
