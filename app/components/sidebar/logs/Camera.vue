@@ -16,6 +16,7 @@ export default {
     };
   },
   mounted() {
+
     ws.onmessage = ({ data }) => {
       this.imageSrc = "data:image/png;base64,"+data;
       console.log("Updated image");
