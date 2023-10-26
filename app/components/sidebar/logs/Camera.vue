@@ -20,6 +20,9 @@ function connectSocket() {
     }, 1000);
   }
 }
+
+connectSocket();
+
 export default {
   data() {
     return {
