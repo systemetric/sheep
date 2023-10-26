@@ -7,8 +7,18 @@
 <script lang="ts">
 import { makeFullUrl } from '@/store';
 
-const ws = new WebSocket("ws://"+window.location.hostname+":5001/");
-console.log("Connecting to websocket at "+window.location.hostname+":5001");
+function connectSocket() {
+  const ws = new WebSocket("ws://"+window.location.hostname+":5001/");
+  console.log("Connecting to websocket at "+window.location.hostname+":5001");
+  ws.onopen = function () {
+    console.log("Connected to websocket.");
+  }
+  ws.onclose = function() {
+    console.log("Websocket disconnected, trying to reconnect...");
+    setTimeout(function() {
+      connectSocket();
+    }, 1000);
+}
 export default {
   data() {
     return {
