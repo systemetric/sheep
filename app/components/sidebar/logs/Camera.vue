@@ -5,16 +5,18 @@
 </template>
 
 <script lang="ts">
+import { makeFullUrl } from '@/store';
+
 const ws = new WebSocket("ws://"+window.location.hostname+":5001/");
 console.log("Connecting to websocket at "+window.location.hostname+":5001");
 export default {
   data() {
     return {
-      imageSrc: "/static/image.jpg",
+      imageSrc: makeFullUrl("/static/image.jpg"),
     };
   },
   mounted() {
-    // Assuming you have a WebSocket instance named "ws"
+
     ws.onmessage = ({ data }) => {
       this.imageSrc = "data:image/png;base64,"+data;
       console.log("Updated image");
