@@ -18,6 +18,7 @@ function connectSocket() {
     setTimeout(function() {
       connectSocket();
     }, 1000);
+  }
 }
 export default {
   data() {
