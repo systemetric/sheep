@@ -1,57 +1,27 @@
 <template>
   <div id="camera-preview">
-      <img :src="url + '?rnd=' + cacheKey">
+      <img v-bind:src="imageSrc">
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { makeFullUrl } from "../../../store";
-
-var rnd = 0;
-const cameraSocket = new WebSocket("ws://localhost:5001");//connects to websocket in shepherd websocks.py
-// Connection opened
-cameraSocket.addEventListener("open", (event) => {
-  console.log("Connected to camera websocket.")//acknowledge connection to the websocket
-});
-
-/*
-// Listen for messages
-cameraSocket.addEventListener("message", (event) => {
-  if (event.data == 'Camera updated') {
-    rnd++;
-    console.log("Camera updated.");
-    export default {data() { return {newimgurl: imgurl + rnd}}};
-  }
-});
-*/
-
+const ws = new WebSocket("ws://"+window.location.hostname+":5001/");
+console.log("Connecting to websocket at "+window.location.hostname+":5001");
 export default {
-
-  name: 'Images',
-  data () {
+  data() {
     return {
-      url: makeFullUrl("/static/image.jpg"),
-      cacheKey: rnd,
-    }
+      imageSrc: "/static/image.jpg",
+    };
   },
-
-  mounted: function () {
-    cameraSocket.addEventListener("message", (event) => {//upon message received
-      if (event.data == 'Camera updated') {
-        rnd++;//change ?rnd= attribute of url to trick browsers into reloading the image
-        console.log("Camera updated.");
-      }
-    });
-    },
-
-  destroyed() {//on websocket disconnected
-    cameraSocket.close();
+  mounted() {
+    // Assuming you have a WebSocket instance named "ws"
+    ws.onmessage = ({ data }) => {
+      this.imageSrc = "data:image/png;base64,"+data;
+      console.log("Updated image");
+    };
   },
-
-}
+};
 </script>
-
 <style lang="scss">
 @import "../../../variables";
 
