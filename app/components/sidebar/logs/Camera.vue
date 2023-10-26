@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts">
-const ws = new WebSocket("ws://robot.local:5001/");
+const ws = new WebSocket("ws://"+window.location.hostname+":5001/");
+console.log("Connecting to websocket at "+window.location.hostname+":5001");
 export default {
   data() {
     return {
