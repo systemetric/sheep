@@ -35,7 +35,6 @@ export default {
         console.log(
           `WebSocket connection closed with code ${event.code}. Reconnecting in ${this.reconnectInterval}ms...`
         );
-        this.imageSrc = makeFullUrl("/static/reconnecting.jpg");
         setTimeout(() => {
           this.connectToWebSocket();
         }, this.reconnectInterval);
