@@ -7,36 +7,43 @@
 <script lang="ts">
 import { makeFullUrl } from '@/store';
 
-function connectSocket() {
-  const ws = new WebSocket("ws://"+window.location.hostname+":5001/");
-  console.log("Connecting to websocket at "+window.location.hostname+":5001");
-  ws.onopen = function () {
-    console.log("Connected to websocket.");
-  }
-  ws.onclose = function() {
-    console.log("Websocket disconnected, trying to reconnect...");
-    setTimeout(function() {
-      connectSocket();
-    }, 1000);
-  }
-}
-
 connectSocket();
 
 export default {
   data() {
     return {
       imageSrc: makeFullUrl("/static/image.jpg"),
+      socket: null,
+      socketUrl: "ws://"+window.location.hostname+":5001/",
+      reconnectInterval: 2000,
     };
   },
-  mounted() {
-
-    ws.onmessage = ({ data }) => {
-      this.imageSrc = "data:image/png;base64,"+data;
-      console.log("Updated image");
-    };
+  created() {
+    this.connectToWebSocket();
+  },
+  methods: {
+    connectToWebSocket() {
+      this.socket = new WebSocket(this.socketUrl);
+      this.socket.onopen = () => {
+        console.log("WebSocket connection established");
+      };
+      this.socket.onmessage = ({ data }) => {
+        this.imageSrc = "data:image/png;base64,"+data;
+        console.log("Image updated");
+      };
+      this.socket.onclose = (event) => {
+        console.log(
+          `WebSocket connection closed with code ${event.code}. Reconnecting in ${this.reconnectInterval}ms...`
+        );
+        this.imageSrc = makeFullUrl("/static/reconnecting.jpg");
+        setTimeout(() => {
+          this.connectToWebSocket();
+        }, this.reconnectInterval);
+      };
+    },
   },
 };
+
 </script>
 <style lang="scss">
 @import "../../../variables";
