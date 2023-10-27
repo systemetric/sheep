@@ -7,22 +7,45 @@
 <script lang="ts">
 import { makeFullUrl } from '@/store';
 
-const ws = new WebSocket("ws://"+window.location.hostname+":5001/");
-console.log("Connecting to websocket at "+window.location.hostname+":5001");
 export default {
   data() {
     return {
       imageSrc: makeFullUrl("/static/image.jpg"),
+      socket: null,
+      socketUrl: "ws://"+"robot.local"+":5001/",
+      reconnectInterval: 2000,
     };
   },
-  mounted() {
-
-    ws.onmessage = ({ data }) => {
-      this.imageSrc = "data:image/png;base64,"+data;
-      console.log("Updated image");
-    };
+  created() {
+    this.connectToWebSocket();
+  },
+  methods: {
+    connectToWebSocket() {
+      this.socket = new WebSocket(this.socketUrl);
+      this.socket.onopen = () => {
+        console.log("WebSocket connection established");
+      };
+      this.socket.onmessage = ({ data }) => {
+        if (data.substring(0,8) == "[CAMERA]") {
+          this.imageSrc = "data:image/png;base64,"+data.substring(8);
+          console.log("Image updated");
+        } else {
+          console.log("Received something else: "+data);
+        }
+      };
+      this.socket.onclose = (event) => {
+        console.log(
+          `WebSocket connection closed with code ${event.code}. Reconnecting in ${this.reconnectInterval}ms...`
+        );
+        this.imageSrc = makeFullUrl("/static/reconnecting.jpg");
+        setTimeout(() => {
+          this.connectToWebSocket();
+        }, this.reconnectInterval);
+      };
+    },
   },
 };
+
 </script>
 <style lang="scss">
 @import "../../../variables";
