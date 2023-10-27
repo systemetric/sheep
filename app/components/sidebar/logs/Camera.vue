@@ -29,8 +29,6 @@ export default {
         if (data.substring(0,8) == "[CAMERA]") {
           this.imageSrc = "data:image/png;base64,"+data.substring(8);
           console.log("Image updated");
-        } else {
-          console.log("Received something else: "+data);
         }
       };
       this.socket.onclose = (event) => {
