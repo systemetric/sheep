@@ -12,7 +12,7 @@ export default {
     return {
       imageSrc: makeFullUrl("/static/image.jpg"),
       socket: null,
-      socketUrl: "ws://"+"robot.local"+":5001/",
+      socketUrl: "ws://"+window.location.hostname+":5001/",
       reconnectInterval: 2000,
     };
   },
