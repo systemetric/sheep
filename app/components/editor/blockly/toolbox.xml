@@ -401,10 +401,7 @@
       </value>
     </block>
     <block type="vision_marker_type_arena"></block>
-    <block type="vision_marker_type_winkie"></block>
-    <block type="vision_marker_type_gillikin"></block>
-    <block type="vision_marker_type_quadling"></block>
-    <block type="vision_marker_type_munchkin"></block>
+    <block type="vision_marker_type_potato"></block>
 
     <block type="controls_forEach">
       <field name="VAR" id=";)moF_=/[]v+i@k*^`Aq" variabletype="">i</field>
@@ -412,5 +409,19 @@
         <block type="vision_see"></block>
       </value>
     </block>
+  </category>
+  <category name="Teams" colour="#ffeb3b">
+    <block type="vision_marker_team">
+      <value name="MARKER">
+        <block type="variables_get">
+          <field name="VAR" id=";)moF_=/[]v+i@k*^`Aq" variabletype="">marker</field>
+        </block>
+      </value>
+    </block>
+    <block type="vision_marker_team_hot_potato"></block>
+    <block type="vision_marker_team_russet"></block>
+    <block type="vision_marker_team_sweet"></block>
+    <block type="vision_marker_team_maris_piper"></block>
+    <block type="vision_marker_team_purple"></block>
   </category>
 </xml>
