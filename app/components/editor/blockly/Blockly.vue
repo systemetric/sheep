@@ -79,6 +79,9 @@ import time
 R = Robot()
 
 ${Blockly.Python.workspaceToCode(this.workspace)}
+
+while True:
+  time.sleep(1)
 `;
 
       if (this.saveTimeout) clearTimeout(this.saveTimeout);
