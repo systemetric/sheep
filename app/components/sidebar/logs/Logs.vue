@@ -41,7 +41,7 @@ export default Vue.extend({
   height: 100%;
 
   #logs-wrapper {
-    height: calc(100vh - #{($sidebar-width * 0.5625) + 35px});
+    height: calc(100vh - #{($sidebar-width * 0.75) + 35px});
     overflow-y: scroll;
 
     @include scrollbar();
