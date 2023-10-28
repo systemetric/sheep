@@ -54,7 +54,7 @@ function loadMovementBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Set motor")
-        .appendField(new Blockly.FieldNumber(1, 1, 2, 1), "MOTOR_INDEX");
+        .appendField(new Blockly.FieldNumber(1, 0, 2, 1), "MOTOR_INDEX");
       this.appendValueInput("MOTOR_PERCENT")
         .setCheck("Number")
         .appendField("to");
@@ -148,7 +148,7 @@ function loadMovementBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Set servo")
-        .appendField(new Blockly.FieldNumber(1, 1, 4, 1), "SERVO_INDEX");
+        .appendField(new Blockly.FieldNumber(1, 0, 4, 1), "SERVO_INDEX");
       this.appendValueInput("SERVO_POSITION")
         .setCheck("Number")
         .appendField("to the");
@@ -196,11 +196,11 @@ function loadMovementBlocks(Blockly) {
     );
     const sign = dropdown_motors_direction === "FORWARDS" ? "" : "-";
     return [
+      `R.motors[0] = ${sign}${value_motors_power_percent}`,
       `R.motors[1] = ${sign}${value_motors_power_percent}`,
-      `R.motors[2] = ${sign}${value_motors_power_percent}`,
       `time.sleep(${value_motors_time})`,
+      `R.motors[0] = 0`,
       `R.motors[1] = 0`,
-      `R.motors[2] = 0`,
       ""
     ].join("\n");
   };
@@ -220,17 +220,17 @@ function loadMovementBlocks(Blockly) {
     const first_sign = dropdown_motors_direction === "clockwise" ? "" : "-";
     const second_sign = dropdown_motors_direction === "clockwise" ? "-" : "";
     return [
-      `R.motors[1] = ${first_sign}${value_motors_power}`,
-      `R.motors[2] = ${second_sign}${value_motors_power}`,
+      `R.motors[0] = ${first_sign}${value_motors_power}`,
+      `R.motors[1] = ${second_sign}${value_motors_power}`,
       `time.sleep(${value_motors_time})`,
+      `R.motors[0] = 0`,
       `R.motors[1] = 0`,
-      `R.motors[2] = 0`,
       ""
     ].join("\n");
   };
 
   Blockly.Python["motors_reset"] = function() {
-    return "R.motors[1] = 0\nR.motors[2] = 0\n";
+    return "R.motors[0] = 0\nR.motors[1] = 0\n";
   };
 
   /*Blockly.Python["motors_safety_override"] = function() {
@@ -258,7 +258,7 @@ function loadGPIOBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Set the mode of GPIO")
-        .appendField(new Blockly.FieldNumber(1, 1, 4, 1), "GPIO_INDEX")
+        .appendField(new Blockly.FieldNumber(1, 0, 4, 1), "GPIO_INDEX")
         .appendField("to")
         .appendField(
           new Blockly.FieldDropdown([
@@ -283,7 +283,7 @@ function loadGPIOBlocks(Blockly) {
       this.appendValueInput("GPIO_STATE")
         .setCheck("Boolean")
         .appendField("Set GPIO")
-        .appendField(new Blockly.FieldNumber(1, 1, 4, 1), "GPIO_INDEX")
+        .appendField(new Blockly.FieldNumber(1, 0, 4, 1), "GPIO_INDEX")
         .appendField("to");
       this.setInputsInline(true);
       this.setPreviousStatement(true, null);
@@ -298,7 +298,7 @@ function loadGPIOBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Digital value of GPIO")
-        .appendField(new Blockly.FieldNumber(1, 1, 4, 1), "GPIO_INDEX");
+        .appendField(new Blockly.FieldNumber(1, 0, 4, 1), "GPIO_INDEX");
       this.setOutput(true, "Boolean");
       this.setColour(gpioHue);
       this.setTooltip("");
@@ -310,7 +310,7 @@ function loadGPIOBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Analog value of GPIO")
-        .appendField(new Blockly.FieldNumber(1, 1, 4, 1), "GPIO_INDEX");
+        .appendField(new Blockly.FieldNumber(1, 0, 4, 1), "GPIO_INDEX");
       this.setOutput(true, "Number");
       this.setColour(gpioHue);
       this.setTooltip("");

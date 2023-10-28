@@ -80,7 +80,7 @@ R = Robot()
 
 ${Blockly.Python.workspaceToCode(this.workspace)}
 
-while true:
+while True:
   time.sleep(1)
 `;
 

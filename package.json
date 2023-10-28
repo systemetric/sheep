@@ -5,8 +5,8 @@
     "node": "8.1.0"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "rimraf ../shepherd/blueprints/staticroutes/editor/*.* && cross-env NODE_ENV=production webpack --progress --config webpack.config.js",
+    "start": "cross-env NODE_ENV=production webpack-dev-server",
+    "build": "rimraf ../camerasheepchanges*.* && cross-env NODE_ENV=production webpack --progress --config webpack.config.js",
     "vuepress:update": "rimraf ./docs/full && rimraf ./docs/*.md && git clone --depth 1 https://github.com/systemetric/robocon-website ./docs/full && cpy ./docs/full/docs/*.md ./docs/ && cpy ./docs/full/.vuepress/public/images/*.* ./docs/images/ && cpy ./docs/full/.vuepress/categories.json ./docs/.vuepress/ && cpy ./docs/full/.vuepress/public/*.pdf ./docs/.vuepress/public && cpy ./docs/full/.vuepress/public/*.zip ./docs/.vuepress/public && cpy ./docs/full/.vuepress/public/*.py ./docs/.vuepress/public && node ./docs/transform.js && rimraf ./docs/full",
     "vuepress:update-local": "rimraf ./docs/full && rimraf ./docs/*.md && git clone --depth 1 ../../robocon-website ./docs/full && cpy ./docs/full/docs/*.md ./docs/ && cpy ./docs/full/.vuepress/public/images/*.* ./docs/images/ && cpy ./docs/full/.vuepress/categories.json ./docs/.vuepress/ && cpy ./docs/full/.vuepress/public/*.pdf ./docs/.vuepress/public && cpy ./docs/full/.vuepress/public/*.zip ./docs/.vuepress/public && cpy ./docs/full/.vuepress/public/*.py ./docs/.vuepress/public && node ./docs/transform.js && rimraf ./docs/full",
     "vuepress:dev": "vuepress dev docs",
