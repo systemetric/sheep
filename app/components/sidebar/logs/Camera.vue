@@ -50,7 +50,7 @@ export default {
 //noinspection CssOptimizeSimilarProperties
 #camera-preview {
   width: 100%;
-  height: $sidebar-width * 0.5625;
+  height: min-content;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
