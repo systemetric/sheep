@@ -19,7 +19,7 @@ R.servos[0] = 50
 However, where the value of a motor determines the *speed* it turns, the value of a servo controls the *position* it is at on its rotation, with a range of -100 to 100. Try it out on your robot to see which values correspond to each position!
 
 :::tip
-When your robot is turned off, the brain will automatically set all of its servos to the 0 position
+When your robot is turned off, the brain will automatically set all of its servos to the 0 position. Make sure you factor this in when you run your robots!
 :::
 
 

@@ -23,7 +23,7 @@ You can control motors using the `motors` property of the `Robot` object. To set
 R.motors[0] = 60
 ```
 
-To control the second motor instead, replace `motors[1]` with `motors[2]`.
+Remember that indexes start at 0; To control the second motor instead, replace `motors[0]` with `motors[1]`.
 
 To stop both motors:
 
@@ -51,7 +51,7 @@ R.motors[1] = 0
 ```
 
 :::tip
-By default the BrainBox is designed to work safely with the TT motors supplied, these are 6V motors. If you choose to use motors that have a diffrent nominal voltage, then you can specify this when initalising the robot object. For example when using 9V motors:
+By default the BrainBox is designed to work safely with the TT motors supplied, these are 6V motors. If you choose to use motors that have a different nominal voltage, then you can specify this when initalising the robot object. For example when using 9V motors:
 
 ```python
 R = robot.Robot(max_motor_voltage=9)
@@ -62,4 +62,4 @@ We do not recommend running motors above their design voltage, it may (sometimes
 
 ## Blockly
 
-Blocks for controlling motors can be found in the **Movement** section.
+Blocks for controlling motors can be found in the **Movement** section. It follows a similar structure to how the python is layed out, with motors being set to a value between -100 and 100 to control their rotation speed.

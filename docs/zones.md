@@ -24,11 +24,15 @@ import robot
 
 R = robot.Robot()
 
-if R.zone == robot.TEAM.LEON:
+# ... (get some object called "markers")
+
+if markers[0] == R.zone:
     print("Do something!")
 else:
     print("Do something else!")
 ```
+
+This code checks if the first marker in the list belongs to the current robot.
 
 ## Blockly
 

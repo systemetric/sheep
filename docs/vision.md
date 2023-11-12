@@ -18,7 +18,7 @@ markers = R.see()
 print(markers)
 ```
 
-`markers` is a Python list of `marker objects`. Which looks like a the following:
+`markers` is a Python list of "marker objects", which each look like the following:
 
 ```
 [arena Marker 0: 0.856m @0.754 degrees
@@ -46,9 +46,13 @@ Full reference of the properties are further below but some useful properties ar
 | `marker.bearing.y`       | The angle your robot needs to turn to get to the marker in degrees                |
 | `marker.info.id`         | Numeric code of the marker                                                        |
 | `marker.info.type`       | One of `ARENA` or `POTATO`                                                        |
-| `marker.info.owning_team`| A team (`PURPLE`, `MARIS_PIPER`, etc), `ARENA` for hot potato or `none` for walls |
+| `marker.info.owning_team`| A team (`PURPLE`, `MARIS_PIPER`, etc), `ARENA` for hot potato or `None` for walls |
 
 ## Codes
+
+:::tip
+You do not need to use the marker ids themselves for your calculations. Use `marker.type` and `marker.owning_team` instead to find out the information you need (see above).
+:::
 
 Every april tag has a code:
 
@@ -61,7 +65,7 @@ Every april tag has a code:
 
 | Codes    | Team  |
 | -------- | ----- |
-| 100-123   | Arena Marker  |
+| 100-123   | Arena Wall Marker  |
 | 00,20 | Russet jacket potatoes |
 | 01,21  | Sweet potatoes jacket potatoes  |
 | 02,22 | Maris piper jacket potatoes  |
@@ -144,12 +148,12 @@ A `Marker` object contains information about a _detected_ marker. It has the fol
 | `info`                      | An object with various information about the marker                                                                                                                                                                                                  |
 | `info.id`                   | The ID number of the marker                                                                                                                                                                                                                          |
 | `info.size`                 | The length of the black edge of the marker in meters                                                                                                                                                                                                 |
-| `info.type`                 | The type of marker, a `MARKER_TYPE`                                                                                                                                                                                                                  |
-| `info.owning_team`          | Which team owns the marker, a `TEAM`, only set when `info.owner` is not `MARKER_OWNER.ARENA`                                                                                                                                                         |
+| `info.type`                 | The type of marker, a `MARKER_TYPE`. This is set to either `ARENA` (walls) or `POTATO` (potatoes)                                                                                                                                                                                                                  |
+| `info.owning_team`          | Which team owns the marker, a `TEAM`. If this is set to `ARENA` then the potato is a hot potato - make sure you don't get burnt!                                                                                                                                                         |
 | `info.bounding_box_colour`  | A tuple describing the colour which is drawn around the marker in the preview image (Blue, Red, Green)                                                                                                                                               |
 | `detection`                 | Technical information which has been inferred from the image.                                                                                                                                                                                        |
 | `detection.tag_family`      | The family of AprilTag which is detected. RoboCon currently only uses `tag36h11`.                                                                                                                                                                    |
-| `detection.tag_id`          | The ID number of the detected marker. Aliased by `marker.code`.                                                                                                                                                                                      |
+| `detection.tag_id`          | The ID number of the detected marker. Aliased by `marker.info.id`.                                                                                                                                                                                      |
 | `detection.hamming`         | The number of bits which were corrected. The detector cannon detect tags with a hamming distance greater than 2.                                                                                                                                     |
 | `detection.decision_margin` | A measure of the quality of the binary decoding process; the average difference between the intensity of a data bit versus the decision threshold. Higher numbers roughly indicate better decodes. Only effective for tags which appear small.       |
 | `detection.homography`      | The 3x3 homography matrix describing the projection from an "ideal" tag (with corners at (-1,1), (1,1), (1,-1), and (-1, -1)) to pixels in the image.                                                                                                |
@@ -168,7 +172,7 @@ no way to know how you've mounted your camera. You may need to account for this.
 :::
 
 :::tip
-You can import `MARKER_OWNER`, `MARKER_TYPE`, `WOOL_TYPE` and `TEAM` from `robot`,   for example...  
+You can import `MARKER_TYPE` and `TEAM` from `robot`, for example...  
 
 ```python
 import robot

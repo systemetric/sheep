@@ -13,7 +13,7 @@ To charge the battery find an adapter and plug the charger into the mains. All t
 
 :::warning
 
-Always make sure that you charge the battery in a LiPo-safe bag. If you have any reason to suspect that the battery is damaged do \*\*NOT\*\* use it.
+Always make sure that you charge the battery in a LiPo-safe bag. If you have any reason to suspect that the battery is damaged **do NOT use it**.
 
 :::
 

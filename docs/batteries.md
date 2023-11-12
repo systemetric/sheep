@@ -23,7 +23,7 @@ You must not use any batteries, chargers, bags or cables **not** explicitly auth
 * Always place the batteries in the provided charging bag when charging or storing.
 * Do not charge or use a damaged battery.
 * Do not tamper with the battery wires.
-* If a battery has any cuts, nicks, exposed copper on wires or is bulging, contact <mailto:robotics@hrsfc.ac.uk> immediately.
+* If a battery has any cuts, nicks, exposed copper on wires or is bulging, [contact us](mailto:robotics@hrsfc.ac.uk) immediately.
 
 :::
 

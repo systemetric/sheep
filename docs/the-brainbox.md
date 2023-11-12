@@ -88,4 +88,4 @@ The PWM pins ranges:
 
 ## Expansion I2C, UART & USB
 
-For expansion please see the [expansion page](/docs/expanding-functionality.html).
+For expansion please see the [expansion page](/docs/expanding-functionality.md).
