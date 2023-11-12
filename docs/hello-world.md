@@ -10,7 +10,7 @@ Following each of the tasks in this category will start you on your way to getti
 
 Ready? Let's go!
 
-> These tutorials will always assume that you have connected to the robot,  started on the homepage and completed the previous tutorials. To find out how to connect to your robot click [here](/docs/connecting.html)
+> These tutorials will always assume that you have connected to the robot,  started on the homepage and completed the previous tutorials. To find out how to connect to your robot click [here](/docs/connecting.md)
 
 # Creating your first program
 
@@ -37,11 +37,16 @@ Details on both these methods can be found in the programming section of the doc
 
 If you are running into problems using the editor its functionality is documented [here](https://hr-robocon.org/docs/editor.html#the-editor-interface).
 
-1. In the editor window write:
+In the editor window write:
 
 ```python
-print("Hello world!")
+import robot
+
+R = robot.Robot()
+
+print("Hello World!")
 ```
+You don't need to know much about what this does - the first couple lines are covered in later chapters, and do setup for the robot to be able to run. The important bit for you to understand is the last bit.
 
 ## Running the code
 
@@ -49,10 +54,10 @@ Click on the green run button in the top right corner:
 
 ![Run Button](/images/editor-robot-run.png)
 
-The logs should then appear with a friendly "Hello world!"
+The logs should then appear with a friendly "Hello World!"
 
 # Troubleshooting and Further Reading
 
-[Connecting to the robot](/docs/connecting.html) <br>
-[Uploading and running code](/docs/uploading.html) <br>
-[Using the editor](/docs/editor.html)
+[Connecting to the robot](/docs/connecting.md) <br>
+[Uploading and running code](/docs/uploading.md) <br>
+[Using the editor](/docs/editor.md)

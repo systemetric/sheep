@@ -59,8 +59,8 @@ module.exports = {
   base: "/docs/",
   themeConfig: {
     nav: [
-      { text: "Shepherd", link: "http://robot.go" },
-      { text: "Editor", link: "http://robot.go/editor" }
+      { text: "Shepherd", link: "http://robot.local" },
+      { text: "Editor", link: "http://robot.local/editor" }
     ],
     sidebar: {
       "/": docsSidebar

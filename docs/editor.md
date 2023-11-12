@@ -7,7 +7,7 @@ position: 3
 
 We recommend you use the code editor that's included with Shepherd to program your robot. You can either program in Python or use Blockly, a powerful Scratch-like programming tool.
 
-Assuming you've [connected to your robot](/docs/connecting.md), head to <http://robot.go/editor> or click the orange
+Assuming you've [connected to your robot](/docs/connecting.md), head to <http://robot.local/editor> or click the orange
 editor button on the Shepherd homepage.
 
 ![Upload Button](/images/shepherd-editor.png)

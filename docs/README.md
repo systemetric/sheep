@@ -37,7 +37,7 @@ To begin, get familiar with the kit provided. It includes : <!--StartFragment-->
  Handling batteries incorrectly can be dangerous. Make sure you follow these [safety guidelines](/docs/charging.html) at all times.
 :::
 :::tip
-You can also access these docs from your robot. Go to <http://robot.go/docs> when you're connected to your robot.
+You can also access these docs from your robot. Go to <http://robot.local/docs> when you're connected to your robot.
 :::
 
 It might also be a good idea to sign up for the [forum](/forum/).  This is a great place to ask questions on anything related to the competition, the kit, or robot programming.
