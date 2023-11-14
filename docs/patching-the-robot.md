@@ -9,8 +9,8 @@ An important part of looking after your robot is making sure its software is up 
 
 ## Steps to Patch
 
-1. Download the patch from the [blog](https://hr-robocon.org/blog/) to the computer you will be connecting your BrainBox to. 
-2. [Turn on](/docs/turning-everything-on.md) and [connect](docs/connecting.md) to your robot. 
+1. Download the patch from the email we sent, or our [blog](https://robocon.uk/blog), onto the computer you will be connecting your BrainBox to. 
+2. [Turn on](/turning-everything-on.md) and [connect](/connecting.md) to your robot. 
 3. Navigate to the editor by visiting <http://robot.local/> and clicking the orange button 
 4. Click the upload button (indicated below). 
 
@@ -26,5 +26,5 @@ An important part of looking after your robot is making sure its software is up 
 11. If you have any issues, please [contact us](mailto:robotics@hrsfc.ac.uk). 
 
 :::tip
-Your robot will restart as part of the patching process, so you will lose connectivity with it for about half a minute. Your laptop should automatically reconnect to the robot when it turns back on. If you cannot connect to your robot, please contact us [contact us](mailto:robotics@hrsfc.ac.uk).
+Your robot will restart as part of the patching process, so you will lose connectivity with it for about half a minute. Your laptop should automatically reconnect to the robot when it turns back on. If you cannot connect to your robot, please [contact us](mailto:robotics@hrsfc.ac.uk).
 :::

@@ -7,7 +7,7 @@ position: 1
 
 Welcome to the docs for **Robocon 2024**!
 
-We suggest you first grasp the idea of the [rules](/docs/rules.md). 
+We suggest you first grasp the idea of the [rules](/rules.md). 
 :::tip
 
 If you are viewing this page on your BrainBox then please check the website for the latest revision.
@@ -40,6 +40,6 @@ To begin, get familiar with the kit provided. It includes : <!--StartFragment-->
 You can also access these docs from your robot. Go to <http://robot.local/docs> when you're connected to your robot.
 :::
 
-It might also be a good idea to sign up for the [forum](/forum/).  This is a great place to ask questions on anything related to the competition, the kit, or robot programming.
+If you have any questions related to the competition, the brainboxes, or any ideas or struggles you have, feel free to [drop us an email](mailto:robotics@hrsfc.ac.uk) - we are happy to help!
 
 <!--END_PI_REMOVE-->

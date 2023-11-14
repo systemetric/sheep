@@ -7,7 +7,7 @@ position: 3
 
 We recommend you use the code editor that's included with Shepherd to program your robot. You can either program in Python or use Blockly, a powerful Scratch-like programming tool.
 
-Assuming you've [connected to your robot](/docs/connecting.md), head to <http://robot.local/editor> or click the orange
+Assuming you've [connected to your robot](/connecting.md), head to <http://robot.local/editor> or click the orange
 editor button on the Shepherd homepage.
 
 ![Upload Button](/images/shepherd-editor.png)
@@ -57,7 +57,7 @@ The create project dialog will appear:
 Give your project a name, then select the type of project you would like. Choose either Python or Blockly. Then click the **create** button.
 
 Your new project will open in the editor. See the sections below for more information on [Python](#python-projects) and
-[Blockly](#blockly-projects) projects. Once you've read these, why not start learning [how to program your robot](/docs/init-robot.md). 
+[Blockly](#blockly-projects) projects. Once you've read these, why not start learning [how to program your robot](/init-robot.md). 
 
 ## Python Projects
 
