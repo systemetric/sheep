@@ -34,7 +34,7 @@ To begin, get familiar with the kit provided. It includes : <!--StartFragment-->
 | 1﻿     | P﻿ower Switch              |
 
 :::warning 
- Handling batteries incorrectly can be dangerous. Make sure you follow these [safety guidelines](/docs/charging.html) at all times.
+ Handling batteries incorrectly can be dangerous. Make sure you follow these [safety guidelines](/charging.md) at all times.
 :::
 :::tip
 You can also access these docs from your robot. Go to <http://robot.local/docs> when you're connected to your robot.

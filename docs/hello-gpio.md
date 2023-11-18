@@ -52,7 +52,7 @@ while True:
 
 Note that `INPUT_PULLUP` returns inverted values - `True` when it isn't pressed and `False` when it is. This means we use `not` to invert the output we get back to something more sensible for our use.
 
-Try making a light turn on or off depending on if a button is pressed. An explanation of why it is needed to use `INPUT_PULLUP` can be found in the [GPIO documentation](/docs/gpio.html#pull-ups).
+Try making a light turn on or off depending on if a button is pressed. An explanation of why it is needed to use `INPUT_PULLUP` can be found in the [GPIO documentation](/gpio.html#pull-ups).
 
 ## Potentiometers
 

@@ -26,7 +26,7 @@ When started, using the start button the robot will default to running the last 
 4. Press the black start button
 
 :::warning
-Code copied from USB sticks is not [Linted](https://en.wikipedia.org/wiki/Lint_%28software%29), sufficiently broken code may crash not just the user code, but also the web interface preventing the robot from reaching "Blinky". See [troubleshooting](/docs/troubleshooting.html#troubleshooting) for details about what the LEDs mean. It is highly recommended for users to export working code from the editor to the USB stick rather than editing code directly. See [troubleshooting](/docs/troubleshooting.html#the-brainbox-appears-to-power-up-but-i-can-t-connect-to-the-website-and-the-blue-led-lights-but-never-starts-flashing) for how to recover a robot which does not boot to Blinky.
+Code copied from USB sticks is not [Linted](https://en.wikipedia.org/wiki/Lint_%28software%29), sufficiently broken code may crash not just the user code, but also the web interface preventing the robot from reaching "Blinky". See [troubleshooting](/troubleshooting.html#troubleshooting) for details about what the LEDs mean. It is highly recommended for users to export working code from the editor to the USB stick rather than editing code directly. See [troubleshooting](/troubleshooting.html#the-brainbox-appears-to-power-up-but-i-can-t-connect-to-the-website-and-the-blue-led-lights-but-never-starts-flashing) for how to recover a robot which does not boot to Blinky.
 
 :::
 

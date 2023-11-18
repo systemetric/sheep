@@ -11,7 +11,7 @@ Your robot can use its camera to see markers to identify tokens and walls. This 
 
 Create a new script called "VisionTest".
 
-Unlike in the previous tutorial, [Hello World](/docs/hello-world.md), the use of the first couple lines of code is important here. So let's break them down:
+Unlike in the previous tutorial, [Hello World](/hello-world.md), the use of the first couple lines of code is important here. So let's break them down:
 
 ```python
 import robot
@@ -65,7 +65,7 @@ Place a few markers infront of the camera on the robot about 10-20cm away and ru
 
 # Troubleshooting and Further Reading
 
-[Connecting to the robot](/docs/connecting.md) <br>
-[Initalising the robot](/docs/init-robot.md)<br>
-[Using the editor](/docs/editor.md) <br>
-[Vision Code](/docs/vision.md)
+[Connecting to the robot](/connecting.md) <br>
+[Initalising the robot](/init-robot.md)<br>
+[Using the editor](/editor.md) <br>
+[Vision Code](/vision.md)

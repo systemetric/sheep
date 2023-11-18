@@ -28,3 +28,6 @@ An important part of looking after your robot is making sure its software is up 
 :::tip
 Your robot will restart as part of the patching process, so you will lose connectivity with it for about half a minute. Your laptop should automatically reconnect to the robot when it turns back on. If you cannot connect to your robot, please [contact us](mailto:robotics@hrsfc.ac.uk).
 :::
+
+### This patch's passphrase is:
+This joke is just pomme de terrible.

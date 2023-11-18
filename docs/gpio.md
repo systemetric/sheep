@@ -15,7 +15,7 @@ There are 4 modes:
 |Digital Output|`robot.OUTPUT`|Allows you to write a high or low signal|
 |Digital Input|`robot.INPUT`|Allows you to read a high or low signal|
 |Analog Input|`robot.INPUT_ANALOG`|Allows you to read a voltage, like a voltmeter|
-|Pullup Input|`robot.INPUT_PULLUP`|Like input, but uses a [weak pullup resistor](/docs/gpio.html#pull-ups)|
+|Pullup Input|`robot.INPUT_PULLUP`|Like input, but uses a [weak pullup resistor](/gpio.html#pull-ups)|
 
 :::tip
 The GPIO are numbered 0-3

@@ -19,7 +19,7 @@ R = robot.Robot()
 ## Driving Around
 
 :::tip
-Motor power is automatically scaled for the 3-6V motors included in the kit, if you are sourcing your own motors then see [the motors reference](/docs/motors.md) for how to allow faster speeds.
+Motor power is automatically scaled for the 3-6V motors included in the kit, if you are sourcing your own motors then see [the motors reference](/motors.md) for how to allow faster speeds.
 :::
 
 Now that everything is set up, it's time to set the motors. All the motors are stored in a list inside the Robot variable - to access the first motor, you can use `R.motors[0]`, the second motor is found with `R.motors[1]`.
@@ -86,7 +86,7 @@ R.motors[1] = 0
 A final note, even if you set both motors the same power, your robot probably won't drive in a perfectly straight line. This is due to defects in the motors, and unless you get specialised motors, no two motors will have the same offset. How your robot deals with this is up to you!
 
 # Troubleshooting and Further Reading
-[Connecting to the robot](/docs/connecting.html) <br>
-[Uploading and running code](/docs/uploading.html) <br>
-[Using the editor](/docs/editor.html) <br>
-[Motors](/docs/motors.html)
+[Connecting to the robot](/connecting.html) <br>
+[Uploading and running code](/uploading.html) <br>
+[Using the editor](/editor.html) <br>
+[Motors](/motors.html)
