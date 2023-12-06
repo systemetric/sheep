@@ -17,7 +17,7 @@ The On/Off switch also plugs into the BrainBox as well as the Start button which
 
 ## Motors & 12V Power
 
-The specifications for the motor board can be found [here](/CytronBoardDocs.pdf), however to summarize:
+The specifications for the motor board can be found [here](/docs/CytronBoardDocs.pdf), however to summarize:
 
 | Condition per channel     | Maximum Value |
 | ------------------------- | ------------- |

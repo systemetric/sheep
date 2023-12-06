@@ -14,7 +14,7 @@ Shipping can sometimes be quite rough for the kit and so we require the followin
 *  Most couriers have rules and regulations regarding shippment of lithium batteries, you must check with any courier beforehand about lithium batteries. In most cases it is required for the batteries to be in a device meaning that the **loose batteries provided in the RoboCon kit can not be shipped**. You may find it easier to return the kit to Hills Road in person. Shipment is at your own risk.
 * Hills Road Robotics will **not** fund the shipment of kit back to us.
 
-If you plan to return the kit to Hills Road in person then please email [robotics@hrsfc.ac.uk](robotics@hrsfc.ac.uk) and we will organise a time to have someone meet you at reception.
+If you plan to return the kit to Hills Road in person then please email [robotics@hrsfc.ac.uk](mailto:robotics@hrsfc.ac.uk) and we will organise a time to have someone meet you at reception.
 
 ## Items to be returned:
 ### Containers:
