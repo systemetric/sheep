@@ -12,6 +12,7 @@ import robot
 import time
 
 R = robot.Robot()
+R.servos[0].mode = robot.PWM_SERVO
 
 R.servos[0] = 50
 ```
