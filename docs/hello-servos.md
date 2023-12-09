@@ -5,7 +5,7 @@ position: 6
 ---
 # Servos
 
-Servos are a type of motor with internal feedback they can move to a set position. The type of servo you will come across most frequently have a set range of motion, but with precise position control you can do a whole manner of actions within the mechanics of your robot! Servo motors (or anything else you connect to the servo ports of your BrainBox) are controlled by accessing `R.servos[]`, similar to how motors are accessed. 
+Servos are a type of motor with internal feedback they can move to a set position. The type of servo you will come across most frequently have a set range of motion, but with precise position control you can do a whole manner of actions within the mechanics of your robot! Servo motors (or anything else you connect to the servo ports of your BrainBox) are controlled by accessing `R.servos[]`, similar to how motors are accessed.
 
 ```python
 import robot
