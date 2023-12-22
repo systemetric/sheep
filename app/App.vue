@@ -22,7 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { MUTATION_SET_CREATE_OPEN, Project, saveProject } from "./store";
+import { ACTION_LOCAL_SAVE_PROJECT, MUTATION_SET_CREATE_OPEN, Project, saveProject } from "./store";
 
 interface Data {
   deleteOpen: boolean;
@@ -50,7 +50,7 @@ export default Vue.extend({
       this.deleteOpen = true;
     },
     download(project: Project) {
-      saveProject(project);
+      this.$store.dispatch(ACTION_LOCAL_SAVE_PROJECT)
     }
   }
 });

@@ -36,6 +36,7 @@ export interface Project {
   content: string;
   lastSaveContent?: string;
   blocklyGenerated?: string;
+  userFileHandle?:UserFileHandle;
 }
 
 /**This is for the projects retreived from the server initally to display the
@@ -102,12 +103,14 @@ export const MUTATION_DISMISS_MESSAGE = "DISMISS_MESSAGE";
 const MUTATION_SET_TEXT_LOG = "SET_TEXT_LOG";
 const MUTATION_RESET_TEXT_LOG_OUTPUT = "RESET_TEXT_LOG_OUTPUT";
 export const MUTATION_SET_SIDEBAR_HIDDEN = "SET_SIDEBAR_HIDDEN";
+export const MUTATION_SET_PROJECT_LOCAL_FILE_HANDLE = "SET_PROJECT_LOCAL_FILE_HANDLE"
 
 // Actions which the user can take which cause mutations
 export const ACTION_FETCH_PROJECTS = "FETCH_PROJECTS";
 export const ACTION_OPEN_PROJECT = "OPEN_PROJECT";
 export const ACTION_CLOSE_PROJECT = "CLOSE_PROJECT";
 export const ACTION_SAVE_PROJECT = "SAVE_PROJECT";
+export const ACTION_LOCAL_SAVE_PROJECT = "LOCAL_SAVE_PROJECT";
 export const ACTION_CREATE_PROJECT = "CREATE_PROJECT";
 export const ACTION_DELETE_PROJECT = "DELETE_PROJECT";
 export const ACTION_RUN_PROJECT = "RUN_PROJECT";
@@ -154,17 +157,75 @@ function compareProjects(a: Project, b: Project): number {
  * saved correctly then creates a blob which can be writen to disk using
  * the FileSaver object
  */
-export function saveProject(p: Project) {
-  const ext = p.filename.substring(p.filename.lastIndexOf(".") + 1);
-  const mime =
-    ext === "py"
-      ? "application/x-python"
-      : ext === "xml"
-        ? "application/xml"
-        : "text/plain";
-  const blob = new Blob([p.content], { type: `${mime};charset=utf-8` });
-  FileSaver.saveAs(blob, p.filename);
+
+export function saveProject(p:Project){
+  console.log("WARNING IAWIOH")
+  saveAsyncProject(p)
 }
+
+async function saveAsyncProject(p:Project){
+  const ext = p.filename.substring(p.filename.lastIndexOf(".") + 1);
+  const mime = {
+    py:"application/x-python",
+    xml:"application/xml",
+  }[ext] 
+    || "text/plain";
+  if(p.userFileHandle){
+    const writer = await p.userFileHandle.createWritable()
+    writer.write(p.content)
+    writer.close()
+  } else {
+    const fileHandle = await getProjectNewFileHandle(p)
+    const writer = await p.userFileHandle.createWritable()
+    writer.write(p.content)
+    writer.close()
+  }
+}
+
+// This is really hacky and there is almost definitely a better way to handle
+// it but I am doing it this way for now (I've looked around but I haven't
+// found an easier way to tell TypeScript about filehandles yet (It throws errors
+// on existing types/interfaces))
+interface UserFileHandle{
+  createWritable:()=>Promise<UserFileWritable>
+}
+
+interface UserFileWritable{
+  write:(a:any)=>void;
+  close:()=>void
+}
+
+async function getProjectNewFileHandle(p:Project) {
+  const options = {
+    id:"saveProject",
+    suggestedName:p.filename,
+    types: [
+      {
+        description: "Project Files",
+        accept: {
+          "application/x-python": [".py"],
+          "application/xml":[".xml"]
+        },
+      },
+    ],
+  };
+  //@ts-ignore
+  const handle: UserFileHandle = await window.showSaveFilePicker(options);
+  return handle;
+}
+
+
+// export function saveProject(p: Project) {
+//   const ext = p.filename.substring(p.filename.lastIndexOf(".") + 1);
+//   const mime =
+//     ext === "py"
+//       ? "application/x-python"
+//       : ext === "xml"
+//         ? "application/xml"
+//         : "text/plain";
+//   const blob = new Blob([p.content], { type: `${mime};charset=utf-8` });
+//   FileSaver.saveAs(blob, p.filename);
+// }
 
 /**The Vuex Store
  * If you are unfamiliar with vuex this may seem a little weird
@@ -258,7 +319,7 @@ export default new Vuex.Store<State>({
       {
         content,
         blocklyGenerated,
-        filename
+        filename,
       }: { content: string; blocklyGenerated?: string; filename?: string }
     ) {
       if (filename) {
@@ -272,6 +333,19 @@ export default new Vuex.Store<State>({
       } else if (state.currentProject) {
         state.currentProject.content = content;
         state.currentProject.blocklyGenerated = blocklyGenerated;
+      }
+    },
+
+    [MUTATION_SET_PROJECT_LOCAL_FILE_HANDLE](state:State, {fileHandle, filename}:{fileHandle:UserFileHandle, filename:string}){
+      if(filename){
+        state.projects = state.projects.map(v => {
+          if (v.filename === filename) {
+            v.userFileHandle = fileHandle
+          }
+          return v;
+        });
+      } else if(state.currentProject){
+        state.currentProject.userFileHandle = fileHandle
       }
     },
 
@@ -455,6 +529,64 @@ export default new Vuex.Store<State>({
       commit(MUTATION_CLOSE_PROJECT, filename);
     },
 
+    /**Saves the project locally:
+     * 
+     */
+    [ACTION_LOCAL_SAVE_PROJECT]({state,commit,dispatch},filename?:string){
+      if(!filename && state.currentProject){
+        filename = state.currentProject.filename
+      }
+      const foundProject = state.projects.find(
+        project => project.filename === filename
+      );
+      if(foundProject){
+        if (foundProject.content === foundProject.lastSaveContent) return;
+        if (foundProject.filename.endsWith(".json")) {
+          let parsed;
+          try {
+            parsed = JSON.parse(foundProject.content);
+          } catch (e) {
+            dispatch(ACTION_SHOW_MESSAGE, {
+              id: MESSAGE_JSON_ERROR,
+              message:
+                "Unable to save block definitions! Failed to parse JSON!",
+              icon: "exclamation-circle"
+            });
+            return;
+          }
+          const valid = validateBlocks(parsed);
+          if (!valid && validateBlocks.errors) {
+            console.log(validateBlocks.errors);
+            const error = validateBlocks.errors[0];
+            dispatch(ACTION_SHOW_MESSAGE, {
+              id: MESSAGE_JSON_ERROR,
+              message: `Unable to save block definitions! At ${
+                error.dataPath
+              }, ${error.message}`,
+              icon: "exclamation-circle"
+            });
+            return;
+          }
+        }
+        (async ()=>{
+          if(foundProject.userFileHandle){
+            const writer = await foundProject.userFileHandle.createWritable()
+            writer.write(foundProject.content)
+            writer.close()
+          } else {
+            const fileHandle = await getProjectNewFileHandle(foundProject)
+            const writer = await foundProject.userFileHandle.createWritable()
+            writer.write(foundProject.content)
+            writer.close()
+            commit(MUTATION_SET_PROJECT_LOCAL_FILE_HANDLE,{
+              fileHandle,
+              filename:foundProject.filename
+            })
+          }
+        })()
+      }
+    },
+
     /**Saves the project:
      * First checks if using blockly, if so:
      *  - Validates that all the blocks are okay
@@ -497,9 +629,12 @@ export default new Vuex.Store<State>({
             });
             return;
           }
+
+
         }
 
         commit(MUTATION_SET_SAVING, true);
+        dispatch(ACTION_LOCAL_SAVE_PROJECT, filename)
         return fetch(makeFullUrl(`/files/save/${foundProject.filename}`), {
           method: "POST",
           body: foundProject.content
@@ -614,7 +749,7 @@ export default new Vuex.Store<State>({
       if (state.currentProject) {
         commit(MUTATION_SET_RUNNING, true);
 
-        if (!noSave) saveProject(state.currentProject);
+        if (!noSave) await dispatch(ACTION_LOCAL_SAVE_PROJECT);
         await dispatch(ACTION_SAVE_PROJECT);
 
         const filename = state.currentProject.filename;
