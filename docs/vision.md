@@ -168,7 +168,7 @@ You must use one of the following resolutions:
  Using a higher resolution will increase the amount of time it takes to process the image, but you may be able to see more. Using a smaller resolution will be faster, but markers further away may stop being visible.
 :::
 ::: warning
-The resolution values may be different on a USB camera. Please see [Using USB cameras](docs/vision.html#using-usb-cameras) for more information.
+The resolution values may be different on a USB camera. Please see _Using USB Cameras_ (below) for more information.
 :::
 
 ### Get data straight from the camera
