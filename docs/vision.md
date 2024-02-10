@@ -190,6 +190,10 @@ image.time # A `datetime` object representing approximately the capture time.
 
 ## Using USB cameras
 
+::: warning
+This feature is not currently supported at Robocon Oxford.
+:::
+
 The built-in Pi Camera inside your brain should be great for your robot, however if you would like to use your own USB Camera (perhaps you want to put a camera somewhere else on your robot), you can! 
 
 USB cameras can have slightly different functionality than the built-in Pi Camera, so they'll need some fine tuning before you can use them. The basic steps outlined below should get you up and running.
