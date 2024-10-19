@@ -217,8 +217,8 @@ function loadMovementBlocks(Blockly) {
       "MOTORS_POWER",
       Blockly.Python.ORDER_ATOMIC
     );
-    const first_sign = dropdown_motors_direction === "clockwise" ? "" : "-";
-    const second_sign = dropdown_motors_direction === "clockwise" ? "-" : "";
+    const first_sign = dropdown_motors_direction === "CLOCKWISE" ? "" : "-";
+    const second_sign = dropdown_motors_direction === "CLOCKWISE" ? "-" : "";
     return [
       `R.motors[0] = ${first_sign}${value_motors_power}`,
       `R.motors[1] = ${second_sign}${value_motors_power}`,

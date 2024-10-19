@@ -15,10 +15,7 @@ module.exports = {
     path: path.resolve(
       __dirname,
       "..",
-      "shepherd",
-      "blueprints",
-      "staticroutes",
-      "editor"
+      "manuallybuiltsheep"
     ),
     filename: "bundle.js"
   },
