@@ -500,9 +500,9 @@ function loadMarkerBlocks(Blockly) {
     }
   };
 
-  Blockly.Blocks["vision_marker_type_potato"] = {
+  Blockly.Blocks["vision_marker_type_target"] = {
     init: function() {
-      this.appendDummyInput().appendField("Potato");
+      this.appendDummyInput().appendField("Target");
       this.setOutput(true, "MarkerType");
       this.setColour(markerTypeHue);
       this.setTooltip("");
@@ -510,9 +510,9 @@ function loadMarkerBlocks(Blockly) {
     }
   };
 
-  Blockly.Blocks["vision_marker_team_hot_potato"] = {
+  Blockly.Blocks["vision_marker_team_sheep"] = {
     init: function() {
-      this.appendDummyInput().appendField("Hot Potato");
+      this.appendDummyInput().appendField("Sheep");
       this.setOutput(true, "MarkerTeam");
       this.setColour(markerTeamHue);
       this.setTooltip("");
@@ -520,16 +520,16 @@ function loadMarkerBlocks(Blockly) {
     }
   };
 
-  Blockly.Blocks["vision_marker_team_russet"] = {
+  Blockly.Blocks["vision_marker_team_ruby"] = {
     init: function() {
-      this.appendDummyInput().appendField("Russet");
+      this.appendDummyInput().appendField("Ruby");
       this.setOutput(true, "MarkerTeam");
       this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
   };
-  Blockly.Blocks["vision_marker_team_sweet"] = {
+  Blockly.Blocks["vision_marker_team_jade"] = {
     init: function() {
       this.appendDummyInput().appendField("Sweet");
       this.setOutput(true, "MarkerTeam");
@@ -538,18 +538,18 @@ function loadMarkerBlocks(Blockly) {
       this.setHelpUrl("");
     }
   };
-  Blockly.Blocks["vision_marker_team_maris_piper"] = {
+  Blockly.Blocks["vision_marker_team_topaz"] = {
     init: function() {
-      this.appendDummyInput().appendField("Maris Piper");
+      this.appendDummyInput().appendField("Topaz");
       this.setOutput(true, "MarkerTeam");
       this.setColour(markerTeamHue);
       this.setTooltip("");
       this.setHelpUrl("");
     }
   };
-  Blockly.Blocks["vision_marker_team_purple"] = {
+  Blockly.Blocks["vision_marker_team_diamond"] = {
     init: function() {
-      this.appendDummyInput().appendField("Purple");
+      this.appendDummyInput().appendField("Diamond");
       this.setOutput(true, "MarkerTeam");
       this.setColour(markerTeamHue);
       this.setTooltip("");
@@ -562,30 +562,30 @@ function loadMarkerBlocks(Blockly) {
     return [code, Blockly.Python.ORDER_NONE];
   };
 
-  Blockly.Python["vision_marker_type_potato"] = function() {
-    const code = "robot.MARKER_TYPE.POTATO";
+  Blockly.Python["vision_marker_type_target"] = function() {
+    const code = "robot.MARKER_TYPE.TARGET";
     return [code, Blockly.Python.ORDER_NONE];
   };
 
-  Blockly.Python["vision_marker_team_hot_potato"] = function() {
+  Blockly.Python["vision_marker_team_sheep"] = function() {
     const code = "robot.TEAM.ARENA";
     return [code, Blockly.Python.ORDER_NONE];
   };
 
-  Blockly.Python["vision_marker_team_russet"] = function() {
-    const code = "robot.TEAM.RUSSET";
+  Blockly.Python["vision_marker_team_ruby"] = function() {
+    const code = "robot.TEAM.RUBY";
     return [code, Blockly.Python.ORDER_NONE];
   };
-  Blockly.Python["vision_marker_team_sweet"] = function() {
-    const code = "robot.TEAM.SWEET";
+  Blockly.Python["vision_marker_team_jade"] = function() {
+    const code = "robot.TEAM.JADE";
     return [code, Blockly.Python.ORDER_NONE];
   };
-  Blockly.Python["vision_marker_team_maris_piper"] = function() {
-    const code = "robot.TEAM.MARIS_PIPER";
+  Blockly.Python["vision_marker_team_topaz"] = function() {
+    const code = "robot.TEAM.TOPAZ";
     return [code, Blockly.Python.ORDER_NONE];
   };
-  Blockly.Python["vision_marker_team_purple"] = function() {
-    const code = "robot.TEAM.PURPLE";
+  Blockly.Python["vision_marker_team_diamond"] = function() {
+    const code = "robot.TEAM.DIAMOND";
     return [code, Blockly.Python.ORDER_NONE];
   };
 }
