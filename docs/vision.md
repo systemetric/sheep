@@ -63,14 +63,14 @@ Every april tag has a code:
 
 - You do not need to use the marker numbers, and can instead use marker.type and marker.owning_team
 
-| Codes    | Team  |
-| -------- | ----- |
-| 100-123   | Arena Wall Marker  |
-| 00,20 | Russet jacket potatoes |
-| 01,21  | Sweet potatoes jacket potatoes  |
-| 02,22 | Maris piper jacket potatoes  |
-|03,23| Purple potato jacket potatoes|
-|04-19, 24-39| Arena owned hot potatoes |
+| Function    | Codes  |      |
+| -------- | ----- | ----
+| Arena Marker   | 100 - 123  |  |
+| Ruby | 24, 25 | Lair marker - 50 |
+| Jade | 26, 27 | Lair marker - 51 |
+| Topaz | 28, 29 | Lair marker - 52 |
+| Diamond | 30, 30 | Lair marker - 53 |
+| Sheep | 0 - 23 |
 
 ## Blockly
 
