@@ -5,7 +5,7 @@ position: 1
 ---
 # Getting Started
 
-Welcome to the docs for **Robocon 2024**!
+Welcome to the docs for **Robocon 2025**!
 
 We suggest you first grasp the idea of the [rules](http://robot.local/docs/RoboCon-2024-Rulebook.pdf). 
 :::tip
