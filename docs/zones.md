@@ -24,9 +24,7 @@ import robot
 
 R = robot.Robot()
 
-# ... (get some object called "markers")
-
-if markers[0] == R.zone:
+if R.zone === robot.TEAM.RUBY:
     print("Do something!")
 else:
     print("Do something else!")
