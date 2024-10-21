@@ -531,7 +531,7 @@ function loadMarkerBlocks(Blockly) {
   };
   Blockly.Blocks["vision_marker_team_jade"] = {
     init: function() {
-      this.appendDummyInput().appendField("Sweet");
+      this.appendDummyInput().appendField("Jade");
       this.setOutput(true, "MarkerTeam");
       this.setColour(markerTeamHue);
       this.setTooltip("");
