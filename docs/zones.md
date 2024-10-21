@@ -24,7 +24,7 @@ import robot
 
 R = robot.Robot()
 
-if R.zone === robot.TEAM.RUBY:
+if R.zone == robot.TEAM.RUBY:
     print("Do something!")
 else:
     print("Do something else!")
