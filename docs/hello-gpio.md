@@ -17,7 +17,7 @@ On the side of your BrainBox, there are 4 regular pins and a "+5V" and "-" pin. 
 GPIO outputs are already protected by a 1k Ohm current limiting resistor, you can connect LEDs directly!
 :::
 
-If you want to put an LED on your robot, for testing or just for looks, you'll need to plug the short side of the LED into the `-` (ground) pin, and the long side of the LED into any regular pin (such as 1). Then, use the following code to set up the pin in `OUTPUT` mode and turn the LED on:
+If you want to put an LED on your robot, for testing or just for looks, you'll need to plug the short leg of the LED into the `-` (ground) pin, and the long leg of the LED into any regular pin (such as 1). Then, use the following code to set up the pin in `OUTPUT` mode and turn the LED on:
 
 ```python
 import robot
