@@ -30,4 +30,5 @@ Your robot will restart as part of the patching process, so you will lose connec
 :::
 
 ### This patch's passphrase is:
-This joke is just pomme de terrible.
+Why are dragons good at music?
+They know lots of scales
