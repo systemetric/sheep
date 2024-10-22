@@ -7,7 +7,7 @@ position: 1
 
 Welcome to the docs for **Robocon 2025**!
 
-We suggest you first grasp the idea of the [rules](http://robot.local/docs/RoboCon-2024-Rulebook.pdf). 
+We suggest you first grasp the idea of the [rules](http://robot.local/docs/roboconRulebook.pdf). 
 :::tip
 
 If you are viewing this page on your BrainBox then please check the website for the latest revision.
