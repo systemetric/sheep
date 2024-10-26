@@ -45,8 +45,8 @@ Full reference of the properties are further below but some useful properties ar
 | `marker.dist`            | Distance to the marker in metres                                                  |
 | `marker.bearing.y`       | The angle your robot needs to turn to get to the marker in degrees                |
 | `marker.info.id`         | Numeric code of the marker                                                        |
-| `marker.info.type`       | One of `ARENA` or `POTATO`                                                        |
-| `marker.info.owning_team`| A team (`PURPLE`, `MARIS_PIPER`, etc), `ARENA` for hot potato or `None` for walls |
+| `marker.info.type`       | One of `ARENA` or `TARGET`                                                        |
+| `marker.info.owning_team`| A team (`RUBY`, `JADE`, etc), `ARENA` for sheep or `None` for walls |
 
 ## Codes
 
