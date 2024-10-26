@@ -28,6 +28,8 @@ Here's a more complete example:
 import robot
 
 R = robot.Robot()
+R.servos[0].mode = robot.PWM_SERVO
+R.servos[1].mode = robot.PWM_SERVO
 
 R.servos[0].mode = robot.PWM_SERVO
 R.servos[1].mode = robot.PWM_SERVO
@@ -46,20 +48,3 @@ R.servos[1] = 0
 ## Blockly
 
 Blocks for controlling servos can be found in the **Movement** section.
-
-# Default positions
-
-Servos default to a starting position 1/2 way through their travel, for some uses teams may need to start with a different resting position to ensure their robot fits within the set sizes, you can set the position that the servo holds while waiting for the start button to be pressed by initilizing the robot object with `servo_defaults=((servo_number,position)...,(servo_number,position))`
-
-E.g. to set servo 0 to `100%` and servo 1 to `50%` use
-```python
-import robot
-
-servo_values = {
-    0: 100,
-    1: 50
-}
-
-R = robot.Robot(servo_defaults=servo_values)
-```
-
