@@ -54,7 +54,7 @@ function loadMovementBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Set motor")
-        .appendField(new Blockly.FieldNumber(1, 0, 2, 1), "MOTOR_INDEX");
+        .appendField(new Blockly.FieldNumber(1, 0, 1, 1), "MOTOR_INDEX");
       this.appendValueInput("MOTOR_PERCENT")
         .setCheck("Number")
         .appendField("to");
@@ -148,7 +148,7 @@ function loadMovementBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Set servo")
-        .appendField(new Blockly.FieldNumber(1, 0, 4, 1), "SERVO_INDEX");
+        .appendField(new Blockly.FieldNumber(1, 0, 3, 1), "SERVO_INDEX");
       this.appendValueInput("SERVO_POSITION")
         .setCheck("Number")
         .appendField("to the");
@@ -258,7 +258,7 @@ function loadGPIOBlocks(Blockly) {
     init: function() {
       this.appendDummyInput()
         .appendField("Set the mode of GPIO")
-        .appendField(new Blockly.FieldNumber(1, 0, 4, 1), "GPIO_INDEX")
+        .appendField(new Blockly.FieldNumber(1, 0, 3, 1), "GPIO_INDEX")
         .appendField("to")
         .appendField(
           new Blockly.FieldDropdown([
