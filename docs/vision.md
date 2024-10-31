@@ -45,13 +45,18 @@ Full reference of the properties are further below but some useful properties ar
 | `marker.dist`            | Distance to the marker in metres                                                  |
 | `marker.bearing.y`       | The angle your robot needs to turn to get to the marker in degrees                |
 | `marker.info.id`         | Numeric code of the marker                                                        |
-| `marker.info.type`       | One of `ARENA` or `TARGET`                                                        |
-| `marker.info.owning_team`| A team (`RUBY`, `JADE`, etc), `ARENA` for sheep or `None` for walls |
+| `marker.info.type`       | Returns `ARENA` for a wall marker, or `TARGET` for sheep, gems and lair markers.                   |
+| `marker.info.owning_team`| Returns the gem colour of the team that owns the marker. For example, calling this on Smaug's lair marker would return `TEAM.RUBY`. |
+| `marker.info.target_type` | Returns if the marker is a sheep, gem, or lair marker. If it's none of these, `NONE` will be returned. For example, a sheep marker would return `TARGET_TYPE.SHEEP`. |
 
 ## Codes
 
 :::tip
 You do not need to use the marker ids themselves for your calculations. Use `marker.type` and `marker.owning_team` instead to find out the information you need (see above).
+:::
+
+:::tip
+`marker.owning_team` will return the Gem Type of that team, not the team name. For example, for team "Smaug" `marker.owning_team` would return "ruby".
 :::
 
 Every april tag has a code:
@@ -148,8 +153,9 @@ A `Marker` object contains information about a _detected_ marker. It has the fol
 | `info`                      | An object with various information about the marker                                                                                                                                                                                                  |
 | `info.id`                   | The ID number of the marker                                                                                                                                                                                                                          |
 | `info.size`                 | The length of the black edge of the marker in meters                                                                                                                                                                                                 |
-| `info.type`                 | The type of marker, a `MARKER_TYPE`. This is set to either `ARENA` (walls) or `POTATO` (potatoes)                                                                                                                                                                                                                  |
-| `info.owning_team`          | Which team owns the marker, a `TEAM`. If this is set to `ARENA` then the potato is a hot potato - make sure you don't get burnt!                                                                                                                                                         |
+| `info.type`                 | Returns `ARENA` for a wall marker, or `TARGET` for sheep, gems and lair markers. |
+| `info.owning_team`          | Returns the gem colour of the team that owns the marker. For example, calling this on Smaug's lair marker would return `TEAM.RUBY`.                                                                                                                                                         |
+| `info.target_type`          | Returns if the marker is a sheep, gem, or lair marker. If it's none of these, `NONE` will be returned. For example, a sheep marker would return `TARGET_TYPE.SHEEP`. |
 | `info.bounding_box_colour`  | A tuple describing the colour which is drawn around the marker in the preview image (Blue, Red, Green)                                                                                                                                               |
 | `detection`                 | Technical information which has been inferred from the image.                                                                                                                                                                                        |
 | `detection.tag_family`      | The family of AprilTag which is detected. RoboCon currently only uses `tag36h11`.                                                                                                                                                                    |
