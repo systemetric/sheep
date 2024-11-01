@@ -52,7 +52,7 @@ Full reference of the properties are further below but some useful properties ar
 ## Codes
 
 :::tip
-You do not need to use the marker ids themselves for your calculations. Use `marker.type` and `marker.owning_team` instead to find out the information you need (see above).
+You do not need to use the marker ids themselves for your calculations. Use `marker.type`, `marker.owning_team` and `marker.target_type` instead to find out the information you need (see above).
 :::
 
 :::tip
