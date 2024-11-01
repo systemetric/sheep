@@ -74,7 +74,7 @@ export default Vue.extend({
     this.workspace.addChangeListener(() => {
       // noinspection TypeScriptUnresolvedFunction
       let blocklyGeneratedCode:string = Blockly.Python.workspaceToCode(this.workspace);
-      // I apologies in advance - this is gonna be hacky...
+      // I apologise in advance - this is gonna be hacky...
       let definesAtStart:string[] = []
       let pwmUses = blocklyGeneratedCode.match(/R\.servos\[[0-3]\]\ \=\ /g);
       for(let i = 0; i < pwmUses.length; i++){

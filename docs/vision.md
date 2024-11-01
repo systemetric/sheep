@@ -179,7 +179,7 @@ no way to know how you've mounted your camera. You may need to account for this.
 :::
 
 :::tip
-You can import `MARKER_TYPE` and `TEAM` from `robot`, for example...  
+You can use `TARGET_TYPE`, `MARKER_TYPE`, and `TEAM` from `robot`, for example...  
 
 ```python
 import robot
@@ -189,12 +189,12 @@ R = robot.Robot()
 markers = R.see()
 
 for marker in markers:
-    if marker.info.owner == robot.MARKER_OWNER.ARENA:
-        print(f"Marker {marker.info.id} is owned by the arena")
-    elif marker.info.owning_team == R.zone:
+    if marker.info.owning_team == R.zone:
         print(f"I own {marker.info.id}")
+    elif marker.info.type == robot.MARKER_TYPE.TARGET and marker.info.owning_team == robot.TEAM.JADE and marker.info.target_type == robot.TARGET_TYPE.LAIR:
+        print(f"Marker {marker.info.id} is Jade's Lair Marker")
     else:
-        print(f"Marker {marker.info.id} is owned by {marker.info.owning_team}")
+        print(f"Marker {marker.info.id} is owned by {marker.info.owning_team}"")
 ```
 
 :::

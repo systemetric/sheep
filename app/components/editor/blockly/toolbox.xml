@@ -423,5 +423,12 @@
     <block type="vision_marker_team_jade"></block>
     <block type="vision_marker_team_topaz"></block>
     <block type="vision_marker_team_diamond"></block>
+    <block type="vision_marker_target_type">
+      <value name="MARKER">
+        <block type="variables_get">
+          <field name="VAR" id=";)moF_=/[]v+i@k*^`Aq" variabletype="">marker</field>
+        </block>
+      </value>
+    </block>
   </category>
 </xml>
