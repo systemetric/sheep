@@ -436,6 +436,19 @@ function loadVisionBlocks(Blockly) {
     }
   };
 
+  Blockly.Blocks["vision_marker_target_type"] = {
+    init: function() {
+      this.appendValueInput("MARKER")
+        .setCheck("Marker")
+        .appendField("Marker target type of");
+      this.setInputsInline(false);
+      this.setOutput(true, "MarkerTargetType");
+      this.setColour(markerTeamHue);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    }
+  };
+
   Blockly.Python["vision_see"] = function(block) {
     const code = `R.see()`;
     return [code, Blockly.Python.ORDER_NONE];
@@ -483,6 +496,16 @@ function loadVisionBlocks(Blockly) {
       Blockly.Python.ORDER_ATOMIC
     );
     const code = `${value_marker}.info.owning_team`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+
+  Blockly.Python["vision_marker_target_type"] = function(block) {
+    const value_marker = Blockly.Python.valueToCode(
+      block,
+      "MARKER",
+      Blockly.Python.ORDER_ATOMIC
+    );
+    const code = `${value_marker}.info.target_type`;
     return [code, Blockly.Python.ORDER_NONE];
   };
 }
@@ -556,6 +579,33 @@ function loadMarkerBlocks(Blockly) {
       this.setHelpUrl("");
     }
   };
+  Blockly.Blocks["vision_marker_target_type_sheep"] = {
+    init: function() {
+      this.appendDummyInput().appendField("Sheep");
+      this.setOutput(true, "MarkerTargetType");
+      this.setColour(markerTeamHue);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    }
+  };
+  Blockly.Blocks["vision_marker_target_type_gem"] = {
+    init: function() {
+      this.appendDummyInput().appendField("Gem");
+      this.setOutput(true, "MarkerTargetType");
+      this.setColour(markerTeamHue);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    }
+  };
+  Blockly.Blocks["vision_marker_target_type_lair"] = {
+    init: function() {
+      this.appendDummyInput().appendField("Lair");
+      this.setOutput(true, "MarkerTargetType");
+      this.setColour(markerTeamHue);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    }
+  };
 
   Blockly.Python["vision_marker_type_arena"] = function() {
     const code = "robot.MARKER_TYPE.ARENA";
@@ -586,6 +636,18 @@ function loadMarkerBlocks(Blockly) {
   };
   Blockly.Python["vision_marker_team_diamond"] = function() {
     const code = "robot.TEAM.DIAMOND";
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  Blockly.Python["vision_marker_target_type_sheep"] = function() {
+    const code = "robot.TARGET_TYPE.SHEEP";
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  Blockly.Python["vision_marker_target_type_gem"] = function() {
+    const code = "robot.TARGET_TYPE.GEM";
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  Blockly.Python["vision_marker_target_type_lair"] = function() {
+    const code = "robot.TARGET_TYPE.LAIR";
     return [code, Blockly.Python.ORDER_NONE];
   };
 }
