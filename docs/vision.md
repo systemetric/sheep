@@ -23,9 +23,10 @@ print(markers)
 ```
 [arena Marker 0: 0.856m @0.754 degrees
 {
-  info.type = POTATO
-  info.id = 15
-  info.owning_team = ARENA
+  info.type = TARGET
+  info.id = 50
+  info.owning_team = TEAM.RUBY
+  info.target_type = TARGET_TYPE.LAIR
   dist = 0.856
   bearing.y = 0.754
   bearing.x = 1.03e+02
