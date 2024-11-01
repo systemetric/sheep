@@ -21,7 +21,7 @@ print(markers)
 `markers` is a Python list of "marker objects", which each look like the following:
 
 ```
-[arena Marker 0: 0.856m @0.754 degrees
+[target Marker 0: 0.856m @0.754 degrees
 {
   info.type = TARGET
   info.id = 50
