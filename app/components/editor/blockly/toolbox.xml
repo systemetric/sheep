@@ -430,5 +430,8 @@
         </block>
       </value>
     </block>
+    <block type="vision_marker_target_type_gem"></block>
+    <block type="vision_marker_target_type_sheep"></block>
+    <block type="vision_marker_target_type_lair"></block>
   </category>
 </xml>
