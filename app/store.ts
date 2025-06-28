@@ -387,6 +387,12 @@ export default new Vuex.Store<State>({
                 return;
             }
 
+            // Handle the erase escape sequence from the server
+            if (data === "\x1b[2J\n") {
+                state.textLog = "";
+                return;
+            }
+
             let log = data.substring(6);
             if (state.textLog !== log) {
                 if (state.textLogOutputState == 0) {
@@ -401,7 +407,6 @@ export default new Vuex.Store<State>({
         /**This just resets the log state for when a new program is to be run*/
         [MUTATION_RESET_TEXT_LOG_OUTPUT](state: State) {
             state.textLogOutputState = 0;
-            state.textLog = "";
         },
 
         //Sets the state of the side bars to be hidden or not
