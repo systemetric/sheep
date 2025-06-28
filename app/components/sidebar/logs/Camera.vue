@@ -5,43 +5,13 @@
 </template>
 
 <script lang="ts">
-import { makeFullUrl } from '@/store';
+import Vue from "vue";
+import { mapState } from "vuex";
 
-export default {
-  data() {
-    return {
-      imageSrc: makeFullUrl("/static/image.jpg"),
-      socket: null,
-      socketUrl: "ws://"+window.location.hostname+":5001/",
-      reconnectInterval: 2000,
-    };
-  },
-  created() {
-    this.connectToWebSocket();
-  },
-  methods: {
-    connectToWebSocket() {
-      this.socket = new WebSocket(this.socketUrl);
-      this.socket.onopen = () => {
-        console.log("WebSocket connection established");
-      };
-      this.socket.onmessage = ({ data }) => {
-        if (data.substring(0,8) == "[CAMERA]") {
-          this.imageSrc = "data:image/png;base64,"+data.substring(8);
-          console.log("Image updated");
-        }
-      };
-      this.socket.onclose = (event) => {
-        console.log(
-          `WebSocket connection closed with code ${event.code}. Reconnecting in ${this.reconnectInterval}ms...`
-        );
-        setTimeout(() => {
-          this.connectToWebSocket();
-        }, this.reconnectInterval);
-      };
-    },
-  },
-};
+export default Vue.extend({
+  name: "camera-preview",
+  computed: mapState(["imageSrc"])
+});
 
 </script>
 <style lang="scss">
