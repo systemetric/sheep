@@ -52,3 +52,7 @@ button {
   background: url($close) 50% no-repeat;
   cursor: pointer;
 }
+
+#app {
+  overflow-y: hidden;
+}
