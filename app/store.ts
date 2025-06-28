@@ -381,9 +381,6 @@ export default new Vuex.Store<State>({
         },
 
         [MUTATION_HANDLE_WEBSOCKET_MESSAGE](state: State, data: string) {
-            console.log(state);
-            console.log(data);
-
             if (data.substring(0, 8) == "[CAMERA]") {
                 state.imageSrc = "data:image/png;base64," + data.substring(8);
                 console.log("Image updated");
@@ -769,8 +766,6 @@ export default new Vuex.Store<State>({
                 console.log("WebSocket connection established");
             };
             state.sockets.socket.onmessage = ({ data }) => {
-                console.log("Recieved message");
-                console.log(data);
                 this.commit(MUTATION_HANDLE_WEBSOCKET_MESSAGE, data);
             };
             state.sockets.socket.onerror = (event) => {
