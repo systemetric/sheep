@@ -89,6 +89,8 @@ interface State {
     textLog: string;
     textLogOutputState: number;
     imageSrc: string;
+    pictureOpen: boolean;
+    lastImageUpdate: number;
     sidebarsHidden: SidebarsHidden;
     sockets: WebSockets;
 }
@@ -110,6 +112,7 @@ export const MUTATION_DISMISS_MESSAGE = "DISMISS_MESSAGE";
 const MUTATION_RESET_TEXT_LOG_OUTPUT = "RESET_TEXT_LOG_OUTPUT";
 export const MUTATION_SET_SIDEBAR_HIDDEN = "SET_SIDEBAR_HIDDEN";
 const MUTATION_HANDLE_WEBSOCKET_MESSAGE = "WEBSOCKET_MESSAGE";
+export const MUTATION_SET_PICTURE_OPEN = "SET_PICTURE_OPEN";
 
 // Actions which the user can take which cause mutations
 export const ACTION_FETCH_PROJECTS = "FETCH_PROJECTS";
@@ -197,6 +200,8 @@ export default new Vuex.Store<State>({
         textLog: "",
         textLogOutputState: 0,
         imageSrc: makeFullUrl("/static/image.jpg"),
+        pictureOpen: false,
+        lastImageUpdate: Date.now(),
         sidebarsHidden: {
             leftHidden: false,
             rightHidden: false,
@@ -342,6 +347,10 @@ export default new Vuex.Store<State>({
             state.createOpen = open;
         },
 
+        [MUTATION_SET_PICTURE_OPEN](state: State, open: boolean) {
+            state.pictureOpen = open;
+        },
+
         /**I think this is just in case multiple files are uploaded at the same
          * time
          */
@@ -383,6 +392,7 @@ export default new Vuex.Store<State>({
         [MUTATION_HANDLE_WEBSOCKET_MESSAGE](state: State, data: string) {
             if (data.substring(0, 8) == "[CAMERA]") {
                 state.imageSrc = "data:image/png;base64," + data.substring(8);
+                state.lastImageUpdate = Date.now();
                 console.log("Image updated");
                 return;
             }

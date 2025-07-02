@@ -8,7 +8,7 @@
                 <FontAwesomeIcon :icon="['fas', 'stop']" class="stop-button"/>
             </IconButton>
         </ProjectTab>
-        <Camera/>
+        <Camera @open="$emit('open')"/>
         <div id="logs-wrapper" ref="logsWrapper">
             <LogText/>
         </div>

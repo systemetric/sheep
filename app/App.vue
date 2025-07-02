@@ -1,19 +1,20 @@
 <template>
     <div id="app">
         <template v-if="loaded">
-            <Sidebar>
-              <ProjectList @create="openCreate" @delete="showDelete" @download="download"/>
+          <Sidebar>
+            <ProjectList @create="openCreate" @delete="showDelete" @download="download"/>
           </Sidebar>
           <Editor/>
           <Sidebar :right="true">
-              <Logs/>
+            <Logs @open="openPicture"/>
           </Sidebar>
           <CreateProjectDialog @close="closeCreate" v-show="createOpen"/>
           <DeleteProjectDialog :project="deleteProject" @close="deleteOpen = false" v-show="deleteOpen"/>
+          <PictureDialog @close="closePicture" v-show="pictureOpen"/>
         </template>
         <div v-else class="empty-state">
-            <FontAwesomeIcon :icon="['fas', 'exclamation-triangle']" size="10x"/>
-            <h2>Unable to connect to Shepherd!</h2>
+          <FontAwesomeIcon :icon="['fas', 'exclamation-triangle']" size="10x"/>
+          <h2>Unable to connect to Shepherd!</h2>
         </div>
         <Messages/>
     </div>
@@ -22,7 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { MUTATION_SET_CREATE_OPEN, Project, saveProject } from "./store";
+import { MUTATION_SET_CREATE_OPEN, MUTATION_SET_PICTURE_OPEN, Project, saveProject } from "./store";
 
 interface Data {
   deleteOpen: boolean;
@@ -37,13 +38,19 @@ export default Vue.extend({
       deleteProject: undefined
     };
   },
-  computed: mapState(["loaded", "createOpen"]),
+  computed: mapState(["loaded", "createOpen", "pictureOpen"]),
   methods: {
     openCreate() {
       this.$store.commit(MUTATION_SET_CREATE_OPEN, true);
     },
     closeCreate() {
       this.$store.commit(MUTATION_SET_CREATE_OPEN, false);
+    },
+    openPicture() {
+      this.$store.commit(MUTATION_SET_PICTURE_OPEN, true);
+    },
+    closePicture() {
+      this.$store.commit(MUTATION_SET_PICTURE_OPEN, false);
     },
     showDelete(project: Project) {
       this.deleteProject = project;
