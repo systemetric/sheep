@@ -9,7 +9,7 @@
             </IconButton>
         </ProjectTab>
         <Camera/>
-        <div id="logs-wrapper">
+        <div id="logs-wrapper" ref="logsWrapper">
             <LogText/>
         </div>
     </div>
@@ -22,7 +22,17 @@ import { ACTION_RUN_PROJECT, ACTION_STOP_PROJECT } from "../../../store";
 
 export default Vue.extend({
   name: "logs",
-  computed: mapState(["running", "currentProject"]),
+  computed: mapState(["running", "currentProject", "textLog"]),
+  watch: {
+    textLog() {
+      this.$nextTick(() => {
+        const wrapper = this.$refs.logsWrapper as HTMLElement;
+        if (wrapper) {
+          wrapper.scrollTop = wrapper.scrollHeight - wrapper.clientHeight;
+        }
+      });
+    }
+  },
   methods: {
     run(e: MouseEvent) {
       return this.$store.dispatch(ACTION_RUN_PROJECT, e.shiftKey);
@@ -30,6 +40,7 @@ export default Vue.extend({
     stop() {
       return this.$store.dispatch(ACTION_STOP_PROJECT);
     }
+
   }
 });
 </script>
