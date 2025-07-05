@@ -42,6 +42,21 @@ export default Vue.extend({
     background-color: #1e1e1e;
     padding: 16px;
 
+    max-width: 100vw;
+    max-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    img {
+      max-width: 80vw;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      display: block;
+    }
+
     .actions {
         text-align: right;
     }
