@@ -1,14 +1,14 @@
 <template>
     <div id="app">
         <template v-if="loaded">
-          <Split>
-            <SplitArea :minSize="250" :size="20">
+          <Split :gutterSize="4">
+            <SplitArea :minSize="250" :size="20" style="background-color: #222222;">
               <ProjectList @create="openCreate" @delete="showDelete" @download="download"/>
             </SplitArea>
             <SplitArea :size="60">
               <Editor/>
             </SplitArea>
-            <SplitArea :minSize="250" :size="20">
+            <SplitArea :minSize="250" :size="20" style="background-color: #222222;">
               <Logs @open="openPicture"/>
             </SplitArea>
           </Split>
@@ -97,5 +97,10 @@ export default Vue.extend({
     margin-top: 16px;
     font-size: 24px;
   }
+}
+
+.gutter {
+  background-color: #222222 !important;
+  background-image: none !important;
 }
 </style>
