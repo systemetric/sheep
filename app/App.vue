@@ -1,14 +1,14 @@
 <template>
     <div id="app">
         <template v-if="loaded">
-          <Split :gutterSize="4">
-            <SplitArea :minSize="250" :size="20" style="background-color: #222222;">
+          <Split :gutterSize="4" ref="splitPane" @onDragEnd="splitPaneDragEnd">
+            <SplitArea :minSize="250" :size="splitSizes[0]" style="background-color: #222222;">
               <ProjectList @create="openCreate" @delete="showDelete" @download="download"/>
             </SplitArea>
-            <SplitArea :size="60">
+            <SplitArea :size="splitSizes[1]">
               <Editor/>
             </SplitArea>
-            <SplitArea :minSize="250" :size="20" style="background-color: #222222;">
+            <SplitArea :minSize="250" :size="splitSizes[2]" style="background-color: #222222;">
               <Logs @open="openPicture"/>
             </SplitArea>
           </Split>
@@ -34,6 +34,7 @@ import Editor from "./components/editor/Editor.vue";
 interface Data {
   deleteOpen: boolean;
   deleteProject: any;
+  splitSizes: number[];
 }
 
 export default Vue.extend({
@@ -41,8 +42,18 @@ export default Vue.extend({
   data(): Data {
     return {
       deleteOpen: false,
-      deleteProject: undefined
+      deleteProject: undefined,
+      splitSizes: [20, 60, 20]
     };
+  },
+  mounted() {
+    let sizes = localStorage.getItem("split-pane-sizes");
+    if (sizes) {
+      const parsed = sizes.split(",").map(Number);
+      if (parsed.length === 3 && parsed.every(n => !isNaN(n))) {
+        this.splitSizes = parsed;
+      }
+    }
   },
   computed: mapState(["loaded", "createOpen", "pictureOpen", "runConfigOpen"]),
   methods: {
@@ -60,6 +71,10 @@ export default Vue.extend({
     },
     closeRunConfig(){
       this.$store.commit(MUTATION_SET_RUN_CONFIG_OPEN, false);
+    },
+    splitPaneDragEnd(size) {
+      this.splitSizes = this.$refs.splitPane.getSizes();
+      localStorage.setItem("split-pane-sizes", this.splitSizes.toString());
     },
     showDelete(project: Project) {
       this.deleteProject = project;
@@ -99,7 +114,7 @@ export default Vue.extend({
   }
 }
 
-.gutter {
+.gutter{
   background-color: #222222 !important;
   background-image: none !important;
 }
