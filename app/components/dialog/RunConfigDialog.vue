@@ -55,7 +55,7 @@ fieldset {
     border-color: #aaa;
     border-width: 2px;
 
-    padding: 0.25em;
+    padding: 0.5em;
 
     legend {
         padding: 0 0.25em;
