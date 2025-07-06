@@ -1,13 +1,17 @@
 <template>
     <div id="app">
         <template v-if="loaded">
-          <Sidebar>
-            <ProjectList @create="openCreate" @delete="showDelete" @download="download"/>
-          </Sidebar>
-          <Editor/>
-          <Sidebar :right="true">
-            <Logs @open="openPicture"/>
-          </Sidebar>
+          <Split>
+            <SplitArea :minSize="250" :size="20">
+              <ProjectList @create="openCreate" @delete="showDelete" @download="download"/>
+            </SplitArea>
+            <SplitArea :size="60">
+              <Editor/>
+            </SplitArea>
+            <SplitArea :minSize="250" :size="20">
+              <Logs @open="openPicture"/>
+            </SplitArea>
+          </Split>
           <CreateProjectDialog @close="closeCreate" v-show="createOpen"/>
           <DeleteProjectDialog :project="deleteProject" @close="deleteOpen = false" v-show="deleteOpen"/>
           <PictureDialog @close="closePicture" v-show="pictureOpen"/>
@@ -25,6 +29,7 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import { MUTATION_SET_CREATE_OPEN, MUTATION_SET_PICTURE_OPEN, MUTATION_SET_RUN_CONFIG_OPEN, Project, saveProject } from "./store";
+import Editor from "./components/editor/Editor.vue";
 
 interface Data {
   deleteOpen: boolean;

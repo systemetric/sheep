@@ -28,7 +28,8 @@ function init(
       monaco.Uri.parse(mainPath)
     ),
     language: "javascript",
-    theme: "vs-dark"
+    theme: "vs-dark",
+    automaticLayout: true,
   });
 
   EventBus.$on("resize", () => {

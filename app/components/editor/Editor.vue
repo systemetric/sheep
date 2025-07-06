@@ -25,25 +25,29 @@ export default Vue.extend({
 @import "../../variables";
 
 #container {
-  flex-grow: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-  #editor-container {
-      > * {
-          position: absolute;
-          top: 35px;
-          left: $sidebar-width;
-          right: $sidebar-width;
-          bottom: 0;
-          overflow: hidden;
-      }
+    #editor-container {
+        position: relative;
+        flex: 1 1 auto;
+        width: 100%;
+        height: 100%;
+        display: flex;
 
-      &.leftHidden > * {
-          left: 0;
-      }
-
-      &.rightHidden > * {
-          right: 0;
-      }
-  }
+        > * {
+            flex: 1 1 auto;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+    }
 }
 </style>

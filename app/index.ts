@@ -71,6 +71,9 @@ import Prism from "vue-prism-component";
 // @ts-ignore
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+import VueSplit from "vue-split-panel";
+Vue.use(VueSplit);
+
 Vue.component("IconButton", IconButton);
 Vue.component("Messages", Messages);
 Vue.component("Editor", Editor);
