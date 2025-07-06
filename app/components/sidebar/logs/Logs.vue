@@ -7,6 +7,9 @@
             <IconButton @click="stop" tooltip="Stop (CTRL-F5)">
                 <FontAwesomeIcon :icon="['fas', 'stop']" class="stop-button"/>
             </IconButton>
+            <IconButton @click="openRunConfig" tooltip="Run Options">
+                <FontAwesomeIcon :icon="['fas', 'cog']" class="run-config-button"/>
+            </IconButton>
         </ProjectTab>
         <Camera @open="$emit('open')"/>
         <div id="logs-wrapper" ref="logsWrapper">
@@ -18,7 +21,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { ACTION_RUN_PROJECT, ACTION_STOP_PROJECT } from "../../../store";
+import { ACTION_RUN_PROJECT, ACTION_STOP_PROJECT, MUTATION_SET_RUN_CONFIG_OPEN } from "../../../store";
+import IconButton from "@/components/IconButton.vue";
 
 export default Vue.extend({
   name: "logs",
@@ -39,8 +43,10 @@ export default Vue.extend({
     },
     stop() {
       return this.$store.dispatch(ACTION_STOP_PROJECT);
+    },
+    openRunConfig() {
+      this.$store.commit(MUTATION_SET_RUN_CONFIG_OPEN, true);
     }
-
   }
 });
 </script>
@@ -64,6 +70,10 @@ export default Vue.extend({
 
   .stop-button path {
     fill: #a55b5b;
+  }
+
+  .run-config-button {
+    fill: #fff;
   }
 }
 </style>

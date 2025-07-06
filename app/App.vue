@@ -11,6 +11,7 @@
           <CreateProjectDialog @close="closeCreate" v-show="createOpen"/>
           <DeleteProjectDialog :project="deleteProject" @close="deleteOpen = false" v-show="deleteOpen"/>
           <PictureDialog @close="closePicture" v-show="pictureOpen"/>
+          <RunConfigDialog @close="closeRunConfig" v-show="runConfigOpen"/>
         </template>
         <div v-else class="empty-state">
           <FontAwesomeIcon :icon="['fas', 'exclamation-triangle']" size="10x"/>
@@ -23,7 +24,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { MUTATION_SET_CREATE_OPEN, MUTATION_SET_PICTURE_OPEN, Project, saveProject } from "./store";
+import { MUTATION_SET_CREATE_OPEN, MUTATION_SET_PICTURE_OPEN, MUTATION_SET_RUN_CONFIG_OPEN, Project, saveProject } from "./store";
 
 interface Data {
   deleteOpen: boolean;
@@ -38,7 +39,7 @@ export default Vue.extend({
       deleteProject: undefined
     };
   },
-  computed: mapState(["loaded", "createOpen", "pictureOpen"]),
+  computed: mapState(["loaded", "createOpen", "pictureOpen", "runConfigOpen"]),
   methods: {
     openCreate() {
       this.$store.commit(MUTATION_SET_CREATE_OPEN, true);
@@ -51,6 +52,9 @@ export default Vue.extend({
     },
     closePicture() {
       this.$store.commit(MUTATION_SET_PICTURE_OPEN, false);
+    },
+    closeRunConfig(){
+      this.$store.commit(MUTATION_SET_RUN_CONFIG_OPEN, false);
     },
     showDelete(project: Project) {
       this.deleteProject = project;

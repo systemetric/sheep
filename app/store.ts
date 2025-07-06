@@ -72,6 +72,11 @@ interface WebSockets {
     reconnectInterval: number;
 }
 
+export interface RunConfiguration {
+    zone: number;
+    mode: "development" | "competition";
+}
+
 // A "bucket" interface which holds all of the state of the program
 interface State {
     loaded: boolean;
@@ -91,6 +96,8 @@ interface State {
     imageSrc: string;
     pictureOpen: boolean;
     lastImageUpdate: number;
+    runConfigOpen: boolean;
+    runConfig: RunConfiguration;
     sidebarsHidden: SidebarsHidden;
     sockets: WebSockets;
 }
@@ -113,6 +120,8 @@ const MUTATION_RESET_TEXT_LOG_OUTPUT = "RESET_TEXT_LOG_OUTPUT";
 export const MUTATION_SET_SIDEBAR_HIDDEN = "SET_SIDEBAR_HIDDEN";
 const MUTATION_HANDLE_WEBSOCKET_MESSAGE = "WEBSOCKET_MESSAGE";
 export const MUTATION_SET_PICTURE_OPEN = "SET_PICTURE_OPEN";
+export const MUTATION_SET_RUN_CONFIG_OPEN = "SET_RUN_CONFIG_OPEN";
+export const MUTATION_SET_RUN_CONFIG = "SET_RUN_CONFIG";
 
 // Actions which the user can take which cause mutations
 export const ACTION_FETCH_PROJECTS = "FETCH_PROJECTS";
@@ -202,6 +211,11 @@ export default new Vuex.Store<State>({
         imageSrc: makeFullUrl("/static/image.jpg"),
         pictureOpen: false,
         lastImageUpdate: Date.now(),
+        runConfigOpen: false,
+        runConfig: {
+            zone: 0,
+            mode: "development",
+        },
         sidebarsHidden: {
             leftHidden: false,
             rightHidden: false,
@@ -347,8 +361,14 @@ export default new Vuex.Store<State>({
             state.createOpen = open;
         },
 
+        // Set the state of the picture dialog
         [MUTATION_SET_PICTURE_OPEN](state: State, open: boolean) {
             state.pictureOpen = open;
+        },
+
+        // Set the state of the run configuration dialog
+        [MUTATION_SET_RUN_CONFIG_OPEN](state: State, open: boolean) {
+            state.runConfigOpen = open;
         },
 
         /**I think this is just in case multiple files are uploaded at the same
@@ -429,6 +449,11 @@ export default new Vuex.Store<State>({
             } else {
                 state.sidebarsHidden.leftHidden = hidden;
             }
+        },
+
+        [MUTATION_SET_RUN_CONFIG](state: State, config: RunConfiguration) {
+            state.runConfig.zone = config.zone;
+            state.runConfig.mode = config.mode;
         },
     },
 
@@ -725,8 +750,14 @@ export default new Vuex.Store<State>({
                     })
                     .then(() => {
                         const runFormData = new FormData();
-                        runFormData.append("zone", "0");
-                        runFormData.append("mode", "development");
+                        runFormData.append(
+                            "zone",
+                            state.runConfig.zone.toString()
+                        );
+                        runFormData.append(
+                            "mode",
+                            state.runConfig.mode.toString()
+                        );
 
                         return fetch(makeFullUrl(`/run/start`), {
                             method: "POST",

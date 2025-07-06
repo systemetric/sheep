@@ -27,6 +27,7 @@ import {
     faPlay,
     faStop,
     faExpand,
+    faCog,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -41,7 +42,8 @@ library.add(
     faChevronLeft,
     faPlay,
     faStop,
-    faExpand
+    faExpand,
+    faCog
 );
 
 import App from "./App.vue";
@@ -63,6 +65,7 @@ import DialogWrapper from "./components/dialog/DialogWrapper.vue";
 import CreateProjectDialog from "./components/dialog/CreateProjectDialog.vue";
 import DeleteProjectDialog from "./components/dialog/DeleteProjectDialog.vue";
 import PictureDialog from "./components/dialog/PictureDialog.vue";
+import RunConfigDialog from "./components/dialog/RunConfigDialog.vue";
 // @ts-ignore
 import Prism from "vue-prism-component";
 // @ts-ignore
@@ -85,6 +88,7 @@ Vue.component("DialogWrapper", DialogWrapper);
 Vue.component("CreateProjectDialog", CreateProjectDialog);
 Vue.component("DeleteProjectDialog", DeleteProjectDialog);
 Vue.component("PictureDialog", PictureDialog);
+Vue.component("RunConfigDialog", RunConfigDialog);
 Vue.component("Prism", Prism);
 Vue.component("FontAwesomeIcon", FontAwesomeIcon);
 
