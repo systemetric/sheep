@@ -59,6 +59,7 @@ export default Vue.extend({
 
     .actions {
         text-align: right;
+        margin-top: 0.5em;
     }
   }
 }

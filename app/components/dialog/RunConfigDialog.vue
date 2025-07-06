@@ -52,7 +52,8 @@ export default Vue.extend({
 <style lang="scss">
 fieldset {
     border-color: #aaa;
-    border-width: 2px;
+    border-width: 1px;
+    border-style: solid;
 
     padding: 0.5em;
 
