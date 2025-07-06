@@ -1,10 +1,12 @@
 <template>
   <div id="camera-preview">
-    <img v-bind:src="imageSrc">
-    <div id="expand-image">
-      <a class="inverted-icon-button" title="Expand Image" @click="$emit('open')">
-        <FontAwesomeIcon :icon="['fas', 'expand']" class="expand-image-button"/>
-      </a>
+    <div id="camera-image">
+      <img v-bind:src="imageSrc">
+      <div id="expand-image">
+        <a class="inverted-icon-button" title="Expand Image" @click="$emit('open')">
+          <FontAwesomeIcon :icon="['fas', 'expand']" class="expand-image-button"/>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -26,12 +28,26 @@ export default Vue.extend({
 
 //noinspection CssOptimizeSimilarProperties
 #camera-preview {
-  position: relative;
   width: 100%;
   height: min-content;
+  max-height: 40%;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+
+  #camera-image {
+    height: 100%;
+    width: fit-content;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+
+    img {
+      height: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+  }
 }
 
 #expand-image {
