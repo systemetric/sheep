@@ -43,7 +43,6 @@ export default Vue.extend({
   methods: {
     submitAndClose() {
         this.$store.commit(MUTATION_SET_RUN_CONFIG, { zone: this.zone, mode: this.mode } as RunConfiguration);
-        console.log({ zone: this.zone, mode: this.mode } as RunConfiguration );
         this.$emit('close');
     }
   }
