@@ -11,9 +11,11 @@
                 <FontAwesomeIcon :icon="['fas', 'cog']" class="run-config-button"/>
             </IconButton>
         </ProjectTab>
-        <Camera @open="$emit('open')"/>
-        <div id="logs-wrapper" ref="logsWrapper">
-            <LogText/>
+        <div id="wrapper">
+          <Camera @open="$emit('open')"/>
+          <div id="logs-wrapper" ref="logsWrapper">
+              <LogText/>
+          </div>
         </div>
     </div>
 </template>
@@ -58,10 +60,15 @@ export default Vue.extend({
   height: 100%;
 
   #logs-wrapper {
-    height: calc(100vh - #{($sidebar-width * 0.75) + 35px});
     overflow-y: scroll;
 
     @include scrollbar();
+  }
+
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 35px);
   }
 
   .run-button path {
