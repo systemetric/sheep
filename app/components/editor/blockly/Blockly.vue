@@ -73,16 +73,30 @@ export default Vue.extend({
     // noinspection TypeScriptUnresolvedFunction
     this.workspace.addChangeListener(() => {
       // noinspection TypeScriptUnresolvedFunction
+      let blocklyGeneratedCode:string = Blockly.Python.workspaceToCode(this.workspace);
+      // I apologise in advance - this is gonna be hacky...
+      let definesAtStart:string[] = []
+      let pwmUses = blocklyGeneratedCode.match(/R\.servos\[[0-3]\]\ \=\ /g);
+      for(let i = 0; i < pwmUses.length; i++){
+        let pwmIndex = pwmUses[i][9];
+        let pythonLine = `R.servos[${pwmIndex}].mode = PWM_SERVO`;
+        if(!definesAtStart.includes(pythonLine)){
+          definesAtStart.push(pythonLine);
+        }
+      }
       this.code = `from robot import *
 import time
 
 R = Robot()
+${definesAtStart.join("\n")}
 
-${Blockly.Python.workspaceToCode(this.workspace)}
+${blocklyGeneratedCode}
 
 while True:
   time.sleep(1)
 `;
+
+      
 
       if (this.saveTimeout) clearTimeout(this.saveTimeout);
       if (this.workspace) {

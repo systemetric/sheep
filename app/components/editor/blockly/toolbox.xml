@@ -312,7 +312,7 @@
   <sep></sep>
   <category name="Movement" colour="#a55b5b">
     <block type="motors_set_power">
-      <field name="MOTOR_INDEX">1</field>
+      <field name="MOTOR_INDEX">0</field>
       <value name="MOTOR_PERCENT">
         <shadow type="math_number">
           <field name="NUM">20</field>
@@ -347,7 +347,7 @@
     </block>
     <block type="motors_reset"></block>
     <block type="servo_set_position">
-      <field name="SERVO_INDEX">1</field>
+      <field name="SERVO_INDEX">0</field>
       <value name="SERVO_POSITION">
         <shadow type="math_number">
           <field name="NUM">50</field>
@@ -358,11 +358,11 @@
   </category>
   <category name="GPIO" colour="#5b80a5">
     <block type="gpio_set_mode">
-      <field name="GPIO_INDEX">1</field>
+      <field name="GPIO_INDEX">0</field>
       <field name="GPIO_MODE">OUTPUT</field>
     </block>
     <block type="gpio_write_digital">
-      <field name="GPIO_INDEX">1</field>
+      <field name="GPIO_INDEX">0</field>
       <value name="GPIO_STATE">
         <shadow type="logic_boolean">
           <field name="BOOL">TRUE</field>
@@ -370,10 +370,10 @@
       </value>
     </block>
     <block type="gpio_read_digital">
-      <field name="GPIO_INDEX">1</field>
+      <field name="GPIO_INDEX">0</field>
     </block>
     <block type="gpio_read_analog">
-      <field name="GPIO_INDEX">1</field>
+      <field name="GPIO_INDEX">0</field>
     </block>
   </category>
   <category name="Vision" colour="#80a55b">
@@ -401,7 +401,7 @@
       </value>
     </block>
     <block type="vision_marker_type_arena"></block>
-    <block type="vision_marker_type_potato"></block>
+    <block type="vision_marker_type_target"></block>
 
     <block type="controls_forEach">
       <field name="VAR" id=";)moF_=/[]v+i@k*^`Aq" variabletype="">i</field>
@@ -418,10 +418,20 @@
         </block>
       </value>
     </block>
-    <block type="vision_marker_team_hot_potato"></block>
-    <block type="vision_marker_team_russet"></block>
-    <block type="vision_marker_team_sweet"></block>
-    <block type="vision_marker_team_maris_piper"></block>
-    <block type="vision_marker_team_purple"></block>
+    <block type="vision_marker_team_sheep"></block>
+    <block type="vision_marker_team_ruby"></block>
+    <block type="vision_marker_team_jade"></block>
+    <block type="vision_marker_team_topaz"></block>
+    <block type="vision_marker_team_diamond"></block>
+    <block type="vision_marker_target_type">
+      <value name="MARKER">
+        <block type="variables_get">
+          <field name="VAR" id=";)moF_=/[]v+i@k*^`Aq" variabletype="">marker</field>
+        </block>
+      </value>
+    </block>
+    <block type="vision_marker_target_type_gem"></block>
+    <block type="vision_marker_target_type_sheep"></block>
+    <block type="vision_marker_target_type_lair"></block>
   </category>
 </xml>

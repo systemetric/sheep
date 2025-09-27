@@ -5,16 +5,16 @@ position: 1
 ---
 # Getting Started
 
-Welcome to the docs for **Robocon 2024**!
+Welcome to the docs for **Robocon 2025**!
 
-We suggest you first grasp the idea of the [rules](http://robot.local/docs/RoboCon-2024-Rulebook.pdf). 
+We suggest you first grasp the idea of the [rules](http://robot.local/docs/roboconRulebook.pdf). 
 :::tip
 
 If you are viewing this page on your BrainBox then please check the website for the latest revision.
 
 :::
 
-![Game logo](/images/roboconHeader.jpg)
+![Game logo](/images/logo-with-sponsors.png)
 Once you've done that, you'll need to turn your robot on.
 
 To begin, get familiar with the kit provided. It includes : <!--StartFragment-->

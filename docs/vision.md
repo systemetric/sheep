@@ -21,11 +21,12 @@ print(markers)
 `markers` is a Python list of "marker objects", which each look like the following:
 
 ```
-[arena Marker 0: 0.856m @0.754 degrees
+[target Marker 0: 0.856m @0.754 degrees
 {
-  info.type = POTATO
-  info.id = 15
-  info.owning_team = ARENA
+  info.type = TARGET
+  info.id = 50
+  info.owning_team = TEAM.RUBY
+  info.target_type = TARGET_TYPE.LAIR
   dist = 0.856
   bearing.y = 0.754
   bearing.x = 1.03e+02
@@ -45,13 +46,18 @@ Full reference of the properties are further below but some useful properties ar
 | `marker.dist`            | Distance to the marker in metres                                                  |
 | `marker.bearing.y`       | The angle your robot needs to turn to get to the marker in degrees                |
 | `marker.info.id`         | Numeric code of the marker                                                        |
-| `marker.info.type`       | One of `ARENA` or `POTATO`                                                        |
-| `marker.info.owning_team`| A team (`PURPLE`, `MARIS_PIPER`, etc), `ARENA` for hot potato or `None` for walls |
+| `marker.info.type`       | Returns `ARENA` for a wall marker, or `TARGET` for sheep, gems and lair markers.                   |
+| `marker.info.owning_team`| Returns the gem colour of the team that owns the marker. For example, calling this on Smaug's lair marker would return `TEAM.RUBY`. |
+| `marker.info.target_type` | Returns if the marker is a sheep, gem, or lair marker. If it's none of these, `NONE` will be returned. For example, a sheep marker would return `TARGET_TYPE.SHEEP`. |
 
 ## Codes
 
 :::tip
-You do not need to use the marker ids themselves for your calculations. Use `marker.type` and `marker.owning_team` instead to find out the information you need (see above).
+You do not need to use the marker ids themselves for your calculations. Use `marker.type`, `marker.owning_team` and `marker.target_type` instead to find out the information you need (see above).
+:::
+
+:::tip
+`marker.owning_team` will return the Gem Type of that team, not the team name. For example, for team "Smaug" `marker.owning_team` would return "ruby".
 :::
 
 Every april tag has a code:
@@ -63,14 +69,14 @@ Every april tag has a code:
 
 - You do not need to use the marker numbers, and can instead use marker.type and marker.owning_team
 
-| Codes    | Team  |
-| -------- | ----- |
-| 100-123   | Arena Wall Marker  |
-| 00,20 | Russet jacket potatoes |
-| 01,21  | Sweet potatoes jacket potatoes  |
-| 02,22 | Maris piper jacket potatoes  |
-|03,23| Purple potato jacket potatoes|
-|04-19, 24-39| Arena owned hot potatoes |
+| Function    | Codes  |      |
+| -------- | ----- | ----
+| Arena Marker   | 100 - 123  |  |
+| Ruby | 24, 25 | Lair marker - 50 |
+| Jade | 26, 27 | Lair marker - 51 |
+| Topaz | 28, 29 | Lair marker - 52 |
+| Diamond | 30, 30 | Lair marker - 53 |
+| Sheep | 0 - 23 |
 
 ## Blockly
 
@@ -148,8 +154,9 @@ A `Marker` object contains information about a _detected_ marker. It has the fol
 | `info`                      | An object with various information about the marker                                                                                                                                                                                                  |
 | `info.id`                   | The ID number of the marker                                                                                                                                                                                                                          |
 | `info.size`                 | The length of the black edge of the marker in meters                                                                                                                                                                                                 |
-| `info.type`                 | The type of marker, a `MARKER_TYPE`. This is set to either `ARENA` (walls) or `POTATO` (potatoes)                                                                                                                                                                                                                  |
-| `info.owning_team`          | Which team owns the marker, a `TEAM`. If this is set to `ARENA` then the potato is a hot potato - make sure you don't get burnt!                                                                                                                                                         |
+| `info.type`                 | Returns `ARENA` for a wall marker, or `TARGET` for sheep, gems and lair markers. |
+| `info.owning_team`          | Returns the gem colour of the team that owns the marker. For example, calling this on Smaug's lair marker would return `TEAM.RUBY`.                                                                                                                                                         |
+| `info.target_type`          | Returns if the marker is a sheep, gem, or lair marker. If it's none of these, `NONE` will be returned. For example, a sheep marker would return `TARGET_TYPE.SHEEP`. |
 | `info.bounding_box_colour`  | A tuple describing the colour which is drawn around the marker in the preview image (Blue, Red, Green)                                                                                                                                               |
 | `detection`                 | Technical information which has been inferred from the image.                                                                                                                                                                                        |
 | `detection.tag_family`      | The family of AprilTag which is detected. RoboCon currently only uses `tag36h11`.                                                                                                                                                                    |
@@ -172,7 +179,7 @@ no way to know how you've mounted your camera. You may need to account for this.
 :::
 
 :::tip
-You can import `MARKER_TYPE` and `TEAM` from `robot`, for example...  
+You can use `TARGET_TYPE`, `MARKER_TYPE`, and `TEAM` from `robot`, for example...  
 
 ```python
 import robot
@@ -182,12 +189,12 @@ R = robot.Robot()
 markers = R.see()
 
 for marker in markers:
-    if marker.info.owner == robot.MARKER_OWNER.ARENA:
-        print(f"Marker {marker.info.id} is owned by the arena")
-    elif marker.info.owning_team == R.zone:
+    if marker.info.owning_team == R.zone:
         print(f"I own {marker.info.id}")
+    elif marker.info.type == robot.MARKER_TYPE.TARGET and marker.info.owning_team == robot.TEAM.JADE and marker.info.target_type == robot.TARGET_TYPE.LAIR:
+        print(f"Marker {marker.info.id} is Jade's Lair Marker")
     else:
-        print(f"Marker {marker.info.id} is owned by {marker.info.owning_team}")
+        print(f"Marker {marker.info.id} is owned by {marker.info.owning_team}"")
 ```
 
 :::
