@@ -7,10 +7,15 @@
             <IconButton @click="stop" tooltip="Stop (CTRL-F5)">
                 <FontAwesomeIcon :icon="['fas', 'stop']" class="stop-button"/>
             </IconButton>
+            <IconButton @click="openRunConfig" tooltip="Run Options">
+                <FontAwesomeIcon :icon="['fas', 'cog']" class="run-config-button"/>
+            </IconButton>
         </ProjectTab>
-        <Camera/>
-        <div id="logs-wrapper">
-            <LogText/>
+        <div id="wrapper">
+          <Camera @open="$emit('open')"/>
+          <div id="logs-wrapper" ref="logsWrapper">
+              <LogText/>
+          </div>
         </div>
     </div>
 </template>
@@ -18,17 +23,31 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { ACTION_RUN_PROJECT, ACTION_STOP_PROJECT } from "../../../store";
+import { ACTION_RUN_PROJECT, ACTION_STOP_PROJECT, MUTATION_SET_RUN_CONFIG_OPEN } from "../../../store";
+import IconButton from "@/components/IconButton.vue";
 
 export default Vue.extend({
   name: "logs",
-  computed: mapState(["running", "currentProject"]),
+  computed: mapState(["running", "currentProject", "textLog"]),
+  watch: {
+    textLog() {
+      this.$nextTick(() => {
+        const wrapper = this.$refs.logsWrapper as HTMLElement;
+        if (wrapper) {
+          wrapper.scrollTop = wrapper.scrollHeight - wrapper.clientHeight;
+        }
+      });
+    }
+  },
   methods: {
     run(e: MouseEvent) {
       return this.$store.dispatch(ACTION_RUN_PROJECT, e.shiftKey);
     },
     stop() {
       return this.$store.dispatch(ACTION_STOP_PROJECT);
+    },
+    openRunConfig() {
+      this.$store.commit(MUTATION_SET_RUN_CONFIG_OPEN, true);
     }
   }
 });
@@ -41,10 +60,15 @@ export default Vue.extend({
   height: 100%;
 
   #logs-wrapper {
-    height: calc(100vh - #{($sidebar-width * 0.75) + 35px});
     overflow-y: scroll;
 
     @include scrollbar();
+  }
+
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 35px);
   }
 
   .run-button path {
@@ -53,6 +77,10 @@ export default Vue.extend({
 
   .stop-button path {
     fill: #a55b5b;
+  }
+
+  .run-config-button {
+    fill: #fff;
   }
 }
 </style>

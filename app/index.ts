@@ -3,43 +3,48 @@ import "./prism";
 
 import Vue from "vue";
 import store, {
-  ACTION_FETCH_PROJECTS,
-  ACTION_RUN_PROJECT,
-  ACTION_SAVE_PROJECT,
-  ACTION_STOP_PROJECT,
-  MUTATION_SET_CREATE_OPEN,
-  MUTATION_SHOW_UPLOAD_DIALOG
+    ACTION_FETCH_PROJECTS,
+    ACTION_INIT_WEBSOCKETS,
+    ACTION_RUN_PROJECT,
+    ACTION_SAVE_PROJECT,
+    ACTION_STOP_PROJECT,
+    MUTATION_SET_CREATE_OPEN,
+    MUTATION_SHOW_UPLOAD_DIALOG,
 } from "./store";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 
 import {
-  faPlus,
-  faTrash,
-  faSyncAlt,
-  faExclamationTriangle,
-  faUpload,
-  faDownload,
-  faInfoCircle,
-  faExclamationCircle,
-  faChevronLeft,
-  faPlay,
-  faStop,
-} from '@fortawesome/free-solid-svg-icons'
+    faPlus,
+    faTrash,
+    faSyncAlt,
+    faExclamationTriangle,
+    faUpload,
+    faDownload,
+    faInfoCircle,
+    faExclamationCircle,
+    faChevronLeft,
+    faPlay,
+    faStop,
+    faExpand,
+    faCog,
+} from "@fortawesome/free-solid-svg-icons";
 
 library.add(
-  faPlus,
-  faTrash,
-  faSyncAlt,
-  faExclamationTriangle,
-  faUpload,
-  faDownload,
-  faInfoCircle,
-  faExclamationCircle,
-  faChevronLeft,
-  faPlay,
-  faStop
-)
+    faPlus,
+    faTrash,
+    faSyncAlt,
+    faExclamationTriangle,
+    faUpload,
+    faDownload,
+    faInfoCircle,
+    faExclamationCircle,
+    faChevronLeft,
+    faPlay,
+    faStop,
+    faExpand,
+    faCog
+);
 
 import App from "./App.vue";
 
@@ -59,10 +64,15 @@ import LogText from "./components/sidebar/logs/LogText.vue";
 import DialogWrapper from "./components/dialog/DialogWrapper.vue";
 import CreateProjectDialog from "./components/dialog/CreateProjectDialog.vue";
 import DeleteProjectDialog from "./components/dialog/DeleteProjectDialog.vue";
+import PictureDialog from "./components/dialog/PictureDialog.vue";
+import RunConfigDialog from "./components/dialog/RunConfigDialog.vue";
 // @ts-ignore
 import Prism from "vue-prism-component";
 // @ts-ignore
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
+import VueSplit from "vue-split-panel";
+Vue.use(VueSplit);
 
 Vue.component("IconButton", IconButton);
 Vue.component("Messages", Messages);
@@ -80,60 +90,67 @@ Vue.component("LogText", LogText);
 Vue.component("DialogWrapper", DialogWrapper);
 Vue.component("CreateProjectDialog", CreateProjectDialog);
 Vue.component("DeleteProjectDialog", DeleteProjectDialog);
+Vue.component("PictureDialog", PictureDialog);
+Vue.component("RunConfigDialog", RunConfigDialog);
 Vue.component("Prism", Prism);
 Vue.component("FontAwesomeIcon", FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
 function init() {
-  // noinspection JSUnusedGlobalSymbols
-  new Vue({
-    el: "#app",
-    store,
-    render: h => h(App)
-  });
+    // noinspection JSUnusedGlobalSymbols
+    new Vue({
+        el: "#app",
+        store,
+        render: (h) => h(App),
+    });
 }
 
-store
-  .dispatch(ACTION_FETCH_PROJECTS)
-  .then(init)
-  .catch(e => {
+store.dispatch(ACTION_INIT_WEBSOCKETS).catch((e) => {
     console.error(e);
     init();
-  });
+});
 
-window.addEventListener("keydown", e => {
-  if (e.key === "F5") {
-    e.preventDefault();
-    if (e.ctrlKey) {
-      // CTRL-F5: Stop
-      // noinspection JSIgnoredPromiseFromCall
-      store.dispatch(ACTION_STOP_PROJECT);
-    } else {
-      // F5: Run
-      // SHIFT-F5: Run without save as dialog
-      // noinspection JSIgnoredPromiseFromCall
-      store.dispatch(ACTION_RUN_PROJECT, e.shiftKey);
+store
+    .dispatch(ACTION_FETCH_PROJECTS)
+    .then(init)
+    .catch((e) => {
+        console.error(e);
+        init();
+    });
+
+window.addEventListener("keydown", (e) => {
+    if (e.key === "F5") {
+        e.preventDefault();
+        if (e.ctrlKey) {
+            // CTRL-F5: Stop
+            // noinspection JSIgnoredPromiseFromCall
+            store.dispatch(ACTION_STOP_PROJECT);
+        } else {
+            // F5: Run
+            // SHIFT-F5: Run without save as dialog
+            // noinspection JSIgnoredPromiseFromCall
+            store.dispatch(ACTION_RUN_PROJECT, e.shiftKey);
+        }
     }
-  }
 
-  // CTRL-S: Save
-  if (e.ctrlKey && e.key === "s") {
-    e.preventDefault();
-    // noinspection JSIgnoredPromiseFromCall
-    store.dispatch(ACTION_SAVE_PROJECT);
-  }
+    // CTRL-S: Save
+    if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        // noinspection JSIgnoredPromiseFromCall
+        store.dispatch(ACTION_SAVE_PROJECT);
+    }
 
-  // CTRL-ALT-N: New project
-  // Must be CTRL-ALT-N as apps can't override CTRL(-SHIFT)-N in Chrome
-  if (e.ctrlKey && e.altKey && e.key === "n") {
-    e.preventDefault();
-    store.commit(MUTATION_SET_CREATE_OPEN, true);
-  }
+    // CTRL-ALT-N: New project
+    // Must be CTRL-ALT-N as apps can't override CTRL(-SHIFT)-N in Chrome
+    if (e.ctrlKey && e.altKey && e.key === "n") {
+        e.preventDefault();
+        store.commit(MUTATION_SET_CREATE_OPEN, true);
+    }
 
-  // CTRL-U: Upload
-  if (e.ctrlKey && e.key === "u") {
-    e.preventDefault();
-    store.commit(MUTATION_SHOW_UPLOAD_DIALOG);
-  }
+    // CTRL-U: Upload
+    if (e.ctrlKey && e.key === "u") {
+        e.preventDefault();
+        store.commit(MUTATION_SHOW_UPLOAD_DIALOG);
+    }
 });

@@ -10,6 +10,7 @@ export default Vue.extend({
   name: "log-text",
   computed: mapState(["textLog"])
 });
+
 </script>
 
 <style lang="scss">

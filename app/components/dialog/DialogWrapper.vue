@@ -19,7 +19,7 @@ export default Vue.extend({
 <style lang="scss">
 .dialog-container {
   position: fixed;
-  z-index: 100;
+  z-index: 1001;
   top: 0;
   left: 0;
   bottom: 0;
