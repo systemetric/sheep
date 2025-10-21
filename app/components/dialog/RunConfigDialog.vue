@@ -1,6 +1,6 @@
 <template>
     <DialogWrapper>
-        <template slot="title">Run Options</template>
+        <template slot="title">Options</template>
         <div>
             <fieldset style="margin-bottom: 1em;">
                 <legend>Zone</legend>
@@ -10,7 +10,7 @@
                 </label>
             </fieldset>
 
-            <fieldset>
+            <fieldset style="margin-bottom: 1em;">
                 <legend>Mode</legend>
                 <label>
                     <input type="radio" value="development" v-model="mode" />
@@ -21,6 +21,12 @@
                     Competition
                 </label>
             </fieldset>
+
+            <fieldset>
+                <legend>Misc</legend>
+                <input type="file" ref="file" accept=".jpg" style="display: none" @change="imageChanged">
+                <button @click="uploadTeamLogo">Upload Team Logo</button>
+            </fieldset>
         </div>
         <template slot="actions">
             <button @click="submitAndClose">Close</button>
@@ -30,7 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { MUTATION_SET_RUN_CONFIG, RunConfiguration } from "@/store";
+import { MUTATION_SET_RUN_CONFIG, RunConfiguration, ACTION_UPLOAD_TEAM_LOGO } from "@/store";
 
 export default Vue.extend({
   name: "run-config-dialog",
@@ -44,7 +50,18 @@ export default Vue.extend({
     submitAndClose() {
         this.$store.commit(MUTATION_SET_RUN_CONFIG, { zone: this.zone, mode: this.mode } as RunConfiguration);
         this.$emit('close');
-    }
+    },
+    imageChanged() {
+        const team_logo_file = (this.$refs as any).file.files[0];
+        if (!team_logo_file) return;
+
+        console.log(`Uploading ${team_logo_file.name}...`);
+
+        this.$store.dispatch(ACTION_UPLOAD_TEAM_LOGO, team_logo_file);
+    },
+    uploadTeamLogo() {
+        (this.$refs as any).file.click();
+    },
   }
 });
 </script>

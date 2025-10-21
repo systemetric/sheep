@@ -134,6 +134,7 @@ export const ACTION_RUN_PROJECT = "RUN_PROJECT";
 export const ACTION_STOP_PROJECT = "STOP_PROJECT";
 export const ACTION_SHOW_MESSAGE = "SHOW_MESSAGE";
 export const ACTION_INIT_WEBSOCKETS = "INIT_WEBSOCKETS";
+export const ACTION_UPLOAD_TEAM_LOGO = "UPLOAD_TEAM_LOGO";
 
 // Messages which can be displayed to the user
 const MESSAGE_RUN = "RUN";
@@ -500,6 +501,18 @@ export default new Vuex.Store<State>({
         [ACTION_CLOSE_PROJECT]({ commit, dispatch }, filename?: string) {
             dispatch(ACTION_SAVE_PROJECT, filename);
             commit(MUTATION_CLOSE_PROJECT, filename);
+        },
+
+        /**Upload a new team logo image*/
+        [ACTION_UPLOAD_TEAM_LOGO]({ state }, file: File) {
+             return fetch(
+                makeFullUrl("/upload/upload-image"),
+                {
+                    method: "POST",
+                    headers: { "Content-Type": file.type },
+                    body: file,
+                }
+             )
         },
 
         /**Saves the project:
