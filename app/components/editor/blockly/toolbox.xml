@@ -402,6 +402,7 @@
     </block>
     <block type="vision_marker_type_arena"></block>
     <block type="vision_marker_type_target"></block>
+    <block type="vision_marker_type_tree"></block>
 
     <block type="controls_forEach">
       <field name="VAR" id=";)moF_=/[]v+i@k*^`Aq" variabletype="">i</field>
@@ -418,11 +419,10 @@
         </block>
       </value>
     </block>
-    <block type="vision_marker_team_sheep"></block>
-    <block type="vision_marker_team_ruby"></block>
-    <block type="vision_marker_team_jade"></block>
-    <block type="vision_marker_team_topaz"></block>
-    <block type="vision_marker_team_diamond"></block>
+    <block type="vision_marker_team_red"></block>
+    <block type="vision_marker_team_green"></block>
+    <block type="vision_marker_team_yellow"></block>
+    <block type="vision_marker_team_blue"></block>
     <block type="vision_marker_target_type">
       <value name="MARKER">
         <block type="variables_get">
@@ -430,8 +430,7 @@
         </block>
       </value>
     </block>
-    <block type="vision_marker_target_type_gem"></block>
-    <block type="vision_marker_target_type_sheep"></block>
-    <block type="vision_marker_target_type_lair"></block>
+    <block type="vision_marker_target_type_supply_drop"></block>
+    <block type="vision_marker_target_type_supply_crate"></block>
   </category>
 </xml>
