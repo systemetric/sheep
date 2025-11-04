@@ -1,5 +1,5 @@
 <template>
-    <div id="blockly-container" v-show="visible">
+    <div ref="blocklyContainer" id="blockly-container" v-show="visible" onr>
         <div id="blockly-area" ref="blocklyArea" >
             <div id="blockly" ref="blockly"></div>
         </div>
@@ -20,12 +20,14 @@ import loadBlocks from "./blocks";
 import loadCustomBlocks from "./block-loader";
 import toolbox from "./toolbox.xml";
 import EventBus from "@/bus";
+import ResizeObserver from 'resize-observer-polyfill';
 
 interface Data {
   workspace?: any;
   loaded: boolean;
   saveTimeout?: number;
   code: string;
+  ro?: ResizeObserver;
 }
 
 export default Vue.extend({
@@ -35,7 +37,8 @@ export default Vue.extend({
       workspace: undefined,
       loaded: false,
       saveTimeout: undefined,
-      code: ""
+      code: "",
+      ro: null as any,
     };
   },
   computed: {
@@ -66,6 +69,9 @@ export default Vue.extend({
     this.onResize();
 
     EventBus.$on("resize", this.onResize);
+
+    this.ro = new ResizeObserver(this.onResize);
+    this.ro.observe(this.$refs.blocklyContainer);
 
     // noinspection TypeScriptUnresolvedFunction
     Blockly.svgResize(this.workspace);
@@ -111,6 +117,9 @@ while True:
     });
 
     this.loaded = true;
+  },
+  beforeDestroy() {
+    this.ro.unobserve(this.$refs.blocklyContainer);
   },
   methods: {
     onResize() {
