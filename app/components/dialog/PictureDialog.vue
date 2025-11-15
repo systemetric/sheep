@@ -16,9 +16,13 @@ import { mapState } from "vuex";
 export default Vue.extend({
   name: "picture-dialog",
   computed: {
-    ...mapState(["lastImageUpdate"]),
+    ...mapState(["lastImageUpdate", "pictureOpen"]),
     imageUrl(): string {
-        return `/run/picture?t=${this.lastImageUpdate}`;
+        if (this.pictureOpen) {
+            return `/run/picture?t=${this.lastImageUpdate}`;
+        } else {
+            return "";
+        }
     }
   }
 });
