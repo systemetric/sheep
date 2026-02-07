@@ -6,17 +6,25 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const dev = process.env.NODE_ENV !== "production";
+const isShepherd = process.env.SHEPHERD === "1";
 
 module.exports = {
   mode: process.env.NODE_ENV,
   entry: "./app/index.ts",
   devtool: "inline-source-map",
   output: {
-    path: path.resolve(
-      __dirname,
-      "..",
-      "manuallybuiltsheep"
-    ),
+    path: (isShepherd ?
+      path.resolve(
+        __dirname,
+        "..",
+        "static",
+        "editor"
+      )
+    : path.resolve(
+        __dirname,
+        "..",
+        "manuallybuiltsheep"
+      )),
     filename: "bundle.js"
   },
   optimization: {
