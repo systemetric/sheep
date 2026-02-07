@@ -67,8 +67,10 @@ interface SidebarsHidden {
 }
 
 interface WebSockets {
-    socket: WebSocket | null;
-    socketUrl: string;
+    logSocket: WebSocket | null;
+    cameraSocket: WebSocket | null;
+    logSocketUrl: string;
+    cameraSocketUrl: string;
     reconnectInterval: number;
 }
 
@@ -118,7 +120,8 @@ const MUTATION_SHOW_MESSAGE = "SHOW_MESSAGE";
 export const MUTATION_DISMISS_MESSAGE = "DISMISS_MESSAGE";
 const MUTATION_RESET_TEXT_LOG_OUTPUT = "RESET_TEXT_LOG_OUTPUT";
 export const MUTATION_SET_SIDEBAR_HIDDEN = "SET_SIDEBAR_HIDDEN";
-const MUTATION_HANDLE_WEBSOCKET_MESSAGE = "WEBSOCKET_MESSAGE";
+const MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE = "LOG_WEBSOCKET_MESSAGE";
+const MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE = "CAMERA_WEBSOCKET_MESSAGE";
 export const MUTATION_SET_PICTURE_OPEN = "SET_PICTURE_OPEN";
 export const MUTATION_SET_RUN_CONFIG_OPEN = "SET_RUN_CONFIG_OPEN";
 export const MUTATION_SET_RUN_CONFIG = "SET_RUN_CONFIG";
@@ -133,7 +136,8 @@ export const ACTION_DELETE_PROJECT = "DELETE_PROJECT";
 export const ACTION_RUN_PROJECT = "RUN_PROJECT";
 export const ACTION_STOP_PROJECT = "STOP_PROJECT";
 export const ACTION_SHOW_MESSAGE = "SHOW_MESSAGE";
-export const ACTION_INIT_WEBSOCKETS = "INIT_WEBSOCKETS";
+export const ACTION_INIT_CAMERA_WEBSOCKET = "INIT_CAMERA_WEBSOCKET";
+export const ACTION_INIT_LOG_WEBSOCKET = "INIT_LOG_WEBSOCKET";
 export const ACTION_UPLOAD_TEAM_LOGO = "UPLOAD_TEAM_LOGO";
 
 // Messages which can be displayed to the user
@@ -222,8 +226,10 @@ export default new Vuex.Store<State>({
             rightHidden: false,
         },
         sockets: {
-            socket: null,
-            socketUrl: "ws://" + window.location.hostname + ":5001/",
+            logSocket: null,
+            cameraSocket: null,
+            logSocketUrl: "ws://" + window.location.hostname + ":5001/log/robot",
+            cameraSocketUrl: "ws://" + window.location.hostname + ":5001/camera",
             reconnectInterval: 2000,
         },
     },
@@ -410,29 +416,27 @@ export default new Vuex.Store<State>({
             }
         },
 
-        [MUTATION_HANDLE_WEBSOCKET_MESSAGE](state: State, data: string) {
-            if (data.substring(0, 8) == "[CAMERA]") {
-                state.imageSrc = "data:image/png;base64," + data.substring(8);
-                state.lastImageUpdate = Date.now();
-                console.log("Image updated");
-                return;
-            }
+        [MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE](state: State, data: string) {
+            state.imageSrc = "data:image/png;base64," + data;
+            state.lastImageUpdate = Date.now();
+            console.log("Image updated");
+        },
 
+        [MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE](state: State, data: string) {
             // Handle the erase escape sequence from the server
             if (data === "\x1b[2J\n") {
                 state.textLog = "";
                 return;
             }
 
-            let log = data.substring(6);
-            if (state.textLog !== log) {
+            if (state.textLog !== data) {
                 if (state.textLogOutputState == 0) {
-                    if (log.trim() === "") state.textLogOutputState = 1;
+                    if (data.trim() === "") state.textLogOutputState = 1;
                 } else if (state.textLogOutputState == 1) {
-                    if (log.trim() !== "") state.textLogOutputState = 2;
+                    if (data.trim() !== "") state.textLogOutputState = 2;
                 }
             }
-            state.textLog += log;
+            state.textLog += data;
         },
 
         /**This just resets the log state for when a new program is to be run*/
@@ -819,23 +823,44 @@ export default new Vuex.Store<State>({
             }, 5000);
         },
 
-        [ACTION_INIT_WEBSOCKETS]({ state }) {
-            state.sockets.socket = new WebSocket(state.sockets.socketUrl);
-            state.sockets.socket.onopen = () => {
-                console.log("WebSocket connection established");
+        [ACTION_INIT_CAMERA_WEBSOCKET]({ state }) {
+            state.sockets.cameraSocket = new WebSocket(state.sockets.cameraSocketUrl);
+            state.sockets.cameraSocket.onopen = () => {
+                console.log("camera websocket connection established");
             };
-            state.sockets.socket.onmessage = ({ data }) => {
-                this.commit(MUTATION_HANDLE_WEBSOCKET_MESSAGE, data);
+            state.sockets.cameraSocket.onmessage = ({ data }) => {
+                this.commit(MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE, data);
             };
-            state.sockets.socket.onerror = (event) => {
-                console.log("WebSocket error: ", event);
+            state.sockets.cameraSocket.onerror = (event) => {
+                console.log("camera websocket error: ", event);
             };
-            state.sockets.socket.onclose = (event) => {
+            state.sockets.cameraSocket.onclose = (event) => {
                 console.log(
-                    `WebSocket connection closed with code ${event.code}. Reconnecting in ${state.sockets.reconnectInterval}ms...`
+                    `camera websocket connection closed with code ${event.code}. Reconnecting in ${state.sockets.reconnectInterval}ms...`
                 );
                 setTimeout(() => {
-                    this.dispatch(ACTION_INIT_WEBSOCKETS);
+                    this.dispatch(ACTION_INIT_CAMERA_WEBSOCKET);
+                }, state.sockets.reconnectInterval);
+            };
+        },
+
+        [ACTION_INIT_LOG_WEBSOCKET]({ state }) {
+            state.sockets.logSocket = new WebSocket(state.sockets.logSocketUrl);
+            state.sockets.logSocket.onopen = () => {
+                console.log("log websocket connection established");
+            };
+            state.sockets.logSocket.onmessage = ({ data }) => {
+                this.commit(MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE, data);
+            };
+            state.sockets.logSocket.onerror = (event) => {
+                console.log("log websocket error: ", event);
+            };
+            state.sockets.logSocket.onclose = (event) => {
+                console.log(
+                    `log websocket connection closed with code ${event.code}. Reconnecting in ${state.sockets.reconnectInterval}ms...`
+                );
+                setTimeout(() => {
+                    this.dispatch(ACTION_INIT_LOG_WEBSOCKET);
                 }, state.sockets.reconnectInterval);
             };
         },

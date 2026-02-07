@@ -4,7 +4,8 @@ import "./prism";
 import Vue from "vue";
 import store, {
     ACTION_FETCH_PROJECTS,
-    ACTION_INIT_WEBSOCKETS,
+    ACTION_INIT_LOG_WEBSOCKET,
+    ACTION_INIT_CAMERA_WEBSOCKET,
     ACTION_RUN_PROJECT,
     ACTION_SAVE_PROJECT,
     ACTION_STOP_PROJECT,
@@ -106,7 +107,12 @@ function init() {
     });
 }
 
-store.dispatch(ACTION_INIT_WEBSOCKETS).catch((e) => {
+store.dispatch(ACTION_INIT_LOG_WEBSOCKET).catch((e) => {
+    console.error(e);
+    init();
+});
+
+store.dispatch(ACTION_INIT_CAMERA_WEBSOCKET).catch((e) => {
     console.error(e);
     init();
 });
