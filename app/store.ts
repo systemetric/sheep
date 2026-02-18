@@ -33,7 +33,7 @@ Vue.use(Vuex);
 export interface Project {
     filename: string;
     name: string;
-    content: string;
+    content: string | null;
     lastSaveContent?: string;
     blocklyGenerated?: string;
 }
@@ -45,9 +45,9 @@ export interface Project {
  * The currently opened document is assumed to be at that location which allows
  * the code completetion to work.
  */
-interface ProjectsResponse {
+interface FilesResponse {
     main: string;
-    projects: Project[];
+    files: string[];
     blocks: BlocksConfiguration;
 }
 
@@ -76,7 +76,7 @@ interface WebSockets {
 
 export interface RunConfiguration {
     zone: number;
-    mode: "development" | "competition";
+    mode: "dev" | "comp";
 }
 
 // A "bucket" interface which holds all of the state of the program
@@ -219,7 +219,7 @@ export default new Vuex.Store<State>({
         runConfigOpen: false,
         runConfig: {
             zone: 0,
-            mode: "development",
+            mode: "dev",
         },
         sidebarsHidden: {
             leftHidden: false,
@@ -239,12 +239,21 @@ export default new Vuex.Store<State>({
         /**Unpacks the projects response ignoring the custom blocks definition
          * Sorts the projects using the compare function.
          */
-        [MUTATION_SET_PROJECTS](state: State, res: ProjectsResponse) {
+        [MUTATION_SET_PROJECTS](state: State, res: FilesResponse) {
             state.loaded = true;
             state.main = res.main;
-            state.projects = res.projects.filter(
-                (test) => test.filename !== "blocks.json"
-            );
+            state.projects = res.files
+                .filter((f) => f !== "blocks.json")
+                .map((f) => ({
+                    filename: f,
+                    name: _.startCase(
+                        f.substring(
+                            0,
+                            f.lastIndexOf(".")
+                        )
+                    ),
+                    content: null,
+                }));
             state.projects.sort(compareProjects);
             state.blocksConfiguration = res.blocks;
         },
@@ -253,12 +262,19 @@ export default new Vuex.Store<State>({
          * If not then adds the project to the list of currently open projects and
          * sets it as the currently open project
          */
-        [MUTATION_OPEN_PROJECT](state: State, filename?: string) {
+        async [MUTATION_OPEN_PROJECT](state: State, filename?: string) {
             const findProject = (project: Project) =>
                 project.filename === filename;
 
             let newProject = state.projects.find(findProject);
             if (!newProject) return;
+
+            if (newProject.content === null) {
+                newProject.content = await fetch(
+                        makeFullUrl(`/files/load/${newProject.filename}`)
+                    ).then((res) => res.json())
+                    .then((res: any) => res.content)
+            }
 
             if (!state.openProjects.find(findProject))
                 state.openProjects.push(newProject);
@@ -472,17 +488,9 @@ export default new Vuex.Store<State>({
          * currently selected project
          */
         [ACTION_FETCH_PROJECTS]({ commit }) {
-            return fetch(makeFullUrl("/files/"))
+            return fetch(makeFullUrl("/files/list"))
                 .then((res) => res.json())
                 .then((res: any) => {
-                    res.projects.forEach((project: Project) => {
-                        project.name = _.startCase(
-                            project.filename.substring(
-                                0,
-                                project.filename.lastIndexOf(".")
-                            )
-                        );
-                    });
                     //TODO add a comment explaining this state
                     commit(MUTATION_SET_PROJECTS, res);
                     return true;
@@ -510,7 +518,7 @@ export default new Vuex.Store<State>({
         /**Upload a new team logo image*/
         [ACTION_UPLOAD_TEAM_LOGO]({ state }, file: File) {
              return fetch(
-                makeFullUrl("/upload/upload-image"),
+                makeFullUrl("/upload/team-image"),
                 {
                     method: "POST",
                     headers: { "Content-Type": file.type },
@@ -751,7 +759,7 @@ export default new Vuex.Store<State>({
                         });
                         commit(MUTATION_RESET_TEXT_LOG_OUTPUT);
 
-                        return fetch(makeFullUrl(`/upload/upload`), {
+                        return fetch(makeFullUrl(`/upload/file`), {
                             method: "POST",
                             body: uploadFormData,
                         });
@@ -766,19 +774,15 @@ export default new Vuex.Store<State>({
                         await wait(1000);
                     })
                     .then(() => {
-                        const runFormData = new FormData();
-                        runFormData.append(
-                            "zone",
-                            state.runConfig.zone.toString()
-                        );
-                        runFormData.append(
-                            "mode",
-                            state.runConfig.mode.toString()
-                        );
+                        const runData = {
+                            zone: state.runConfig.zone,
+                            mode: state.runConfig.mode.toString(),
+                        };
 
                         return fetch(makeFullUrl(`/run/start`), {
                             method: "POST",
-                            body: runFormData,
+                            headers: [["Content-Type: application/json"]],
+                            body: runData.toString(),
                         });
                     })
                     .then(() => commit(MUTATION_SET_RUNNING, false))

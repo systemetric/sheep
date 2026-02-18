@@ -13,11 +13,11 @@
             <fieldset style="margin-bottom: 1em;">
                 <legend>Mode</legend>
                 <label>
-                    <input type="radio" value="development" v-model="mode" />
+                    <input type="radio" value="dev" v-model="mode" />
                     Development
                 </label>
                 <label>
-                    <input type="radio" value="competition" v-model="mode" />
+                    <input type="radio" value="comp" v-model="mode" />
                     Competition
                 </label>
             </fieldset>
@@ -43,7 +43,7 @@ export default Vue.extend({
   data() {
     return {
         zone: this.$store.state.runConfig.zone !== undefined ? this.$store.state.runConfig.zone : 0,
-        mode: this.$store.state.runConfig.mode !== undefined ? this.$store.state.runConfig.mode : 'development'
+        mode: this.$store.state.runConfig.mode !== undefined ? this.$store.state.runConfig.mode : 'dev'
     }
   },
   methods: {
