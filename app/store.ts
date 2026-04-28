@@ -75,7 +75,7 @@ interface WebSockets {
 }
 
 export interface RunConfiguration {
-    zone: number;
+    zone: "red" | "yellow" | "green" | "blue";
     mode: "dev" | "comp";
 }
 
@@ -218,7 +218,7 @@ export default new Vuex.Store<State>({
         lastImageUpdate: Date.now(),
         runConfigOpen: false,
         runConfig: {
-            zone: 0,
+            zone: "red",
             mode: "dev",
         },
         sidebarsHidden: {
@@ -228,7 +228,7 @@ export default new Vuex.Store<State>({
         sockets: {
             logSocket: null,
             cameraSocket: null,
-            logSocketUrl: "ws://" + window.location.hostname + ":5001/log/robot",
+            logSocketUrl: "ws://" + window.location.hostname + ":5001/robot/log",
             cameraSocketUrl: "ws://" + window.location.hostname + ":5001/camera",
             reconnectInterval: 2000,
         },
@@ -440,8 +440,8 @@ export default new Vuex.Store<State>({
 
         [MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE](state: State, data: string) {
             // Handle the erase escape sequence from the server
-            if (data === "\x1b[2J\n") {
-                state.textLog = "";
+            if (data.includes("\x1b[2J")) {
+                state.textLog = data.slice(data.indexOf("\x1b[2J") + 4);
                 return;
             }
 
@@ -517,12 +517,14 @@ export default new Vuex.Store<State>({
 
         /**Upload a new team logo image*/
         [ACTION_UPLOAD_TEAM_LOGO]({ state }, file: File) {
+             const formData = new FormData();
+             formData.append("team-image.jpg", file);
+
              return fetch(
                 makeFullUrl("/upload/team-image"),
                 {
                     method: "POST",
-                    headers: { "Content-Type": file.type },
-                    body: file,
+                    body: formData,
                 }
              )
         },
@@ -775,14 +777,14 @@ export default new Vuex.Store<State>({
                     })
                     .then(() => {
                         const runData = {
-                            zone: state.runConfig.zone,
+                            zone: state.runConfig.zone.toString(),
                             mode: state.runConfig.mode.toString(),
                         };
 
-                        return fetch(makeFullUrl(`/run/start`), {
+                        return fetch(makeFullUrl(`/control/start`), {
                             method: "POST",
-                            headers: [["Content-Type: application/json"]],
-                            body: runData.toString(),
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(runData),
                         });
                     })
                     .then(() => commit(MUTATION_SET_RUNNING, false))
@@ -801,7 +803,7 @@ export default new Vuex.Store<State>({
                 icon: "info-circle",
             });
 
-            return fetch(makeFullUrl(`/run/stop`), {
+            return fetch(makeFullUrl(`/control/stop`), {
                 method: "POST",
             });
         },
@@ -833,7 +835,18 @@ export default new Vuex.Store<State>({
                 console.log("camera websocket connection established");
             };
             state.sockets.cameraSocket.onmessage = ({ data }) => {
-                this.commit(MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE, data);
+                if (data instanceof Blob) {
+                    const reader = new FileReader();
+
+                    reader.onload = () => {
+                        const text = reader.result as string;
+                        this.commit(MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE, text);
+                    };
+
+                    reader.readAsText(data);
+                } else {
+                    this.commit(MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE, data);
+                }
             };
             state.sockets.cameraSocket.onerror = (event) => {
                 console.log("camera websocket error: ", event);
@@ -854,7 +867,18 @@ export default new Vuex.Store<State>({
                 console.log("log websocket connection established");
             };
             state.sockets.logSocket.onmessage = ({ data }) => {
-                this.commit(MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE, data);
+                if (data instanceof Blob) {
+                    const reader = new FileReader();
+
+                    reader.onload = () => {
+                        const text = reader.result as string;
+                        this.commit(MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE, text);
+                    };
+
+                    reader.readAsText(data);
+                } else {
+                    this.commit(MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE, data);
+                }
             };
             state.sockets.logSocket.onerror = (event) => {
                 console.log("log websocket error: ", event);

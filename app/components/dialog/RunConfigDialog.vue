@@ -4,9 +4,9 @@
         <div>
             <fieldset style="margin-bottom: 1em;">
                 <legend>Zone</legend>
-                <label v-for="n in 4" :key="n">
-                    <input type="radio" :value="n - 1" v-model="zone" />
-                    {{ n - 1 }}
+                <label v-for="color in zones" :key="n">
+                    <input type="radio" :value="color" v-model="zone" />
+                    {{ color }}
                 </label>
             </fieldset>
 
@@ -42,8 +42,9 @@ export default Vue.extend({
   name: "run-config-dialog",
   data() {
     return {
-        zone: this.$store.state.runConfig.zone !== undefined ? this.$store.state.runConfig.zone : 0,
-        mode: this.$store.state.runConfig.mode !== undefined ? this.$store.state.runConfig.mode : 'dev'
+        zone: this.$store.state.runConfig.zone !== undefined ? this.$store.state.runConfig.zone : 'red',
+        mode: this.$store.state.runConfig.mode !== undefined ? this.$store.state.runConfig.mode : 'dev',
+        zones: [ "red", "yellow", "green", "blue" ],
     }
   },
   methods: {
