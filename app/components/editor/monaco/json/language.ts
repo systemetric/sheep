@@ -9,7 +9,7 @@ monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
     {
       uri: "http://robot.go/blocks-schema.json",
       fileMatch: ["*.py"],
-      schema: schema
-    }
-  ]
+      schema: schema,
+    },
+  ],
 });

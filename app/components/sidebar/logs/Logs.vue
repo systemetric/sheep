@@ -1,29 +1,42 @@
 <template>
-    <div id="logs">
-        <ProjectTab name="Logs" :header="true">
-            <IconButton v-if="currentProject && !currentProject.filename.endsWith('.json')" @click="run" :class="{disabled: running}" tooltip="Run (F5)">
-                <FontAwesomeIcon :icon="running ? ['fas', 'sync-alt'] : ['fas', 'play']" :spin="running" class="run-button"/>
-            </IconButton>
-            <IconButton @click="stop" tooltip="Stop (CTRL-F5)">
-                <FontAwesomeIcon :icon="['fas', 'stop']" class="stop-button"/>
-            </IconButton>
-            <IconButton @click="openRunConfig" tooltip="Run Options">
-                <FontAwesomeIcon :icon="['fas', 'cog']" class="run-config-button"/>
-            </IconButton>
-        </ProjectTab>
-        <div id="wrapper">
-          <Camera @open="$emit('open')"/>
-          <div id="logs-wrapper" ref="logsWrapper">
-              <LogText/>
-          </div>
-        </div>
+  <div id="logs">
+    <ProjectTab name="Logs" :header="true">
+      <IconButton
+        v-if="currentProject && !currentProject.filename.endsWith('.json')"
+        @click="run"
+        :class="{ disabled: running }"
+        tooltip="Run (F5)"
+      >
+        <FontAwesomeIcon
+          :icon="running ? ['fas', 'sync-alt'] : ['fas', 'play']"
+          :spin="running"
+          class="run-button"
+        />
+      </IconButton>
+      <IconButton @click="stop" tooltip="Stop (CTRL-F5)">
+        <FontAwesomeIcon :icon="['fas', 'stop']" class="stop-button" />
+      </IconButton>
+      <IconButton @click="openRunConfig" tooltip="Run Options">
+        <FontAwesomeIcon :icon="['fas', 'cog']" class="run-config-button" />
+      </IconButton>
+    </ProjectTab>
+    <div id="wrapper">
+      <Camera @open="$emit('open')" />
+      <div id="logs-wrapper" ref="logsWrapper">
+        <LogText />
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { ACTION_RUN_PROJECT, ACTION_STOP_PROJECT, MUTATION_SET_RUN_CONFIG_OPEN } from "../../../store";
+import {
+  ACTION_RUN_PROJECT,
+  ACTION_STOP_PROJECT,
+  MUTATION_SET_RUN_CONFIG_OPEN,
+} from "../../../store";
 import IconButton from "@/components/IconButton.vue";
 
 export default Vue.extend({
@@ -37,7 +50,7 @@ export default Vue.extend({
           wrapper.scrollTop = wrapper.scrollHeight - wrapper.clientHeight;
         }
       });
-    }
+    },
   },
   methods: {
     run(e: MouseEvent) {
@@ -48,8 +61,8 @@ export default Vue.extend({
     },
     openRunConfig() {
       this.$store.commit(MUTATION_SET_RUN_CONFIG_OPEN, true);
-    }
-  }
+    },
+  },
 });
 </script>
 

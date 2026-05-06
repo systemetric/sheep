@@ -1,7 +1,7 @@
 const _ = {
   isArray: require("lodash/isArray"),
   isPlainObject: require("lodash/isPlainObject"),
-  template: require("lodash/template")
+  template: require("lodash/template"),
 };
 
 interface BlockParameter {
@@ -12,7 +12,7 @@ interface BlockParameter {
 
 export interface BlockDefinition {
   id: string;
-  definition: ((string | BlockParameter)[]) | string;
+  definition: (string | BlockParameter)[] | string;
   template: string;
 }
 
@@ -41,17 +41,17 @@ function getField(Blockly: any, parameter: BlockParameter) {
 
 export default function loadBlocks(
   Blockly: any,
-  blocks: BlockDefinition[]
+  blocks: BlockDefinition[],
 ): string {
   let toolbox = "";
 
-  blocks.forEach(block => {
+  blocks.forEach((block) => {
     const id = `robot_${block.id}`;
 
     toolbox += `<block type="${id}"></block>\n`;
 
     Blockly.Blocks[id] = {
-      init: function() {
+      init: function () {
         let dummy = this.appendDummyInput();
 
         function addText(text: string) {
@@ -77,7 +77,7 @@ export default function loadBlocks(
         this.setColour(65);
         this.setTooltip("");
         this.setHelpUrl("");
-      }
+      },
     };
 
     const fields: string[] = [];
@@ -92,7 +92,7 @@ export default function loadBlocks(
 
     const compiled = _.template(block.template);
 
-    Blockly.Python[id] = function(item: any) {
+    Blockly.Python[id] = function (item: any) {
       const input: { [index: string]: any } = {};
       for (let field of fields) {
         input[field] = item.getFieldValue(field);

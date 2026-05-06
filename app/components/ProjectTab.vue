@@ -1,10 +1,16 @@
 <template>
-    <div :class="classes" @click="open">
-        <i v-if="!header" :class="{[filename]: true}"></i>
-        <span>{{name}}</span>
-        <a v-if="!header && tab" class="close" :class="{unsaved}" @click.stop="close" title="Close"></a>
-        <slot></slot>
-    </div>
+  <div :class="classes" @click="open">
+    <i v-if="!header" :class="{ [filename]: true }"></i>
+    <span>{{ name }}</span>
+    <a
+      v-if="!header && tab"
+      class="close"
+      :class="{ unsaved }"
+      @click.stop="close"
+      title="Close"
+    ></a>
+    <slot></slot>
+  </div>
 </template>
 
 <script lang="ts">
@@ -17,23 +23,23 @@ export default Vue.extend({
   props: {
     tab: {
       type: Boolean,
-      default: false
+      default: false,
     },
     header: {
       type: Boolean,
-      default: false
+      default: false,
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     unsaved: {
       type: Boolean,
-      default: false
+      default: false,
     },
     filename: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapState(["currentProject"]),
@@ -47,9 +53,9 @@ export default Vue.extend({
         header: this.header,
         file: !this.header,
         tab: this.tab,
-        active: active
+        active: active,
       };
-    }
+    },
   },
   methods: {
     open() {
@@ -58,8 +64,8 @@ export default Vue.extend({
     },
     close() {
       return this.$store.dispatch(ACTION_CLOSE_PROJECT, this.filename);
-    }
-  }
+    },
+  },
 });
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-    <pre id="log-text"><code v-text="textLog"></code></pre>
+  <pre id="log-text"><code v-text="textLog"></code></pre>
 </template>
 
 <script lang="ts">
@@ -8,9 +8,8 @@ import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "log-text",
-  computed: mapState(["textLog"])
+  computed: mapState(["textLog"]),
 });
-
 </script>
 
 <style lang="scss">

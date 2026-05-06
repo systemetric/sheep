@@ -1,10 +1,17 @@
 <template>
   <div id="camera-preview">
     <div id="camera-image">
-      <img v-bind:src="imageSrc">
+      <img v-bind:src="imageSrc" />
       <div id="expand-image">
-        <a class="inverted-icon-button" title="Expand Image" @click="$emit('open')">
-          <FontAwesomeIcon :icon="['fas', 'expand']" class="expand-image-button"/>
+        <a
+          class="inverted-icon-button"
+          title="Expand Image"
+          @click="$emit('open')"
+        >
+          <FontAwesomeIcon
+            :icon="['fas', 'expand']"
+            class="expand-image-button"
+          />
         </a>
       </div>
     </div>
@@ -18,9 +25,8 @@ import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "camera-preview",
-  computed: mapState(["imageSrc"])
+  computed: mapState(["imageSrc"]),
 });
-
 </script>
 
 <style lang="scss">

@@ -1,10 +1,12 @@
 <template>
-    <div ref="blocklyContainer" id="blockly-container" v-show="visible" onr>
-        <div id="blockly-area" ref="blocklyArea" >
-            <div id="blockly" ref="blockly"></div>
-        </div>
-        <div id="blockly-output"><Prism :code="code" language="python"></Prism></div>
+  <div ref="blocklyContainer" id="blockly-container" v-show="visible" onr>
+    <div id="blockly-area" ref="blocklyArea">
+      <div id="blockly" ref="blockly"></div>
     </div>
+    <div id="blockly-output">
+      <Prism :code="code" language="python"></Prism>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -13,14 +15,14 @@ import { mapState } from "vuex";
 import {
   ACTION_SAVE_PROJECT,
   MUTATION_UPDATE_PROJECT,
-  Project
+  Project,
 } from "../../../store";
 const Blockly = require("node-blockly/browser");
 import loadBlocks from "./blocks";
 import loadCustomBlocks from "./block-loader";
 import toolbox from "./toolbox.xml";
 import EventBus from "@/bus";
-import ResizeObserver from 'resize-observer-polyfill';
+import ResizeObserver from "resize-observer-polyfill";
 
 interface Data {
   workspace?: any;
@@ -51,7 +53,7 @@ export default Vue.extend({
         (currentProject && currentProject.filename.endsWith(".xml")) ||
         !this.loaded
       );
-    }
+    },
   },
   mounted() {
     loadBlocks(Blockly);
@@ -63,7 +65,7 @@ export default Vue.extend({
 
     this.workspace = Blockly.inject(this.$refs.blockly, {
       toolbox: toolbox,
-      trashcan: false
+      trashcan: false,
     });
     window.addEventListener("resize", this.onResize, false);
     this.onResize();
@@ -79,14 +81,17 @@ export default Vue.extend({
     // noinspection TypeScriptUnresolvedFunction
     this.workspace.addChangeListener(() => {
       // noinspection TypeScriptUnresolvedFunction
-      let blocklyGeneratedCode:string = Blockly.Python.workspaceToCode(this.workspace);
+      let blocklyGeneratedCode: string = Blockly.Python.workspaceToCode(
+        this.workspace,
+      );
       // I apologise in advance - this is gonna be hacky...
-      let definesAtStart:string[] = []
-      let pwmUses = blocklyGeneratedCode.match(/R\.servos\[[0-3]\]\ \=\ /g) || [];
-      for(let i = 0; i < pwmUses.length; i++){
+      let definesAtStart: string[] = [];
+      let pwmUses =
+        blocklyGeneratedCode.match(/R\.servos\[[0-3]\]\ \=\ /g) || [];
+      for (let i = 0; i < pwmUses.length; i++) {
         let pwmIndex = pwmUses[i][9];
         let pythonLine = `R.servos[${pwmIndex}].mode = PWM_SERVO`;
-        if(!definesAtStart.includes(pythonLine)){
+        if (!definesAtStart.includes(pythonLine)) {
           definesAtStart.push(pythonLine);
         }
       }
@@ -101,13 +106,11 @@ while True:
   time.sleep(1)
 `;
 
-      
-
       if (this.saveTimeout) clearTimeout(this.saveTimeout);
       if (this.workspace) {
         this.$store.commit(MUTATION_UPDATE_PROJECT, {
           content: this.toXML(),
-          blocklyGenerated: this.code
+          blocklyGenerated: this.code,
         });
       }
       this.saveTimeout = setTimeout(() => {
@@ -143,7 +146,7 @@ while True:
       this.workspace.clear();
       // noinspection TypeScriptUnresolvedVariable, TypeScriptUnresolvedFunction
       return Blockly.Xml.domToWorkspace(xml, this.workspace);
-    }
+    },
   },
   watch: {
     ["$store.state.currentProject"](newValue?: Project) {
@@ -166,8 +169,8 @@ while True:
           }
         }, 25);
       }
-    }
-  }
+    },
+  },
 });
 </script>
 

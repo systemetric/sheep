@@ -1,13 +1,14 @@
 <template>
-    <div id="tabs">
-         <ProjectTab
-                v-for="project in openProjects"
-                :key="project.filename"
-                :name="project.name"
-                :filename="project.filename"
-                :unsaved="project.content !== project.lastSaveContent"
-                :tab="true"/>
-    </div>
+  <div id="tabs">
+    <ProjectTab
+      v-for="project in openProjects"
+      :key="project.filename"
+      :name="project.name"
+      :filename="project.filename"
+      :unsaved="project.content !== project.lastSaveContent"
+      :tab="true"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,7 +17,7 @@ import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "tabs",
-  computed: mapState(["openProjects"])
+  computed: mapState(["openProjects"]),
 });
 </script>
 

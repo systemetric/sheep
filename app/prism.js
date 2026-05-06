@@ -4,7 +4,7 @@ var _self =
   typeof window !== "undefined"
     ? window // if in browser
     : typeof WorkerGlobalScope !== "undefined" &&
-      self instanceof WorkerGlobalScope
+        self instanceof WorkerGlobalScope
       ? self // if in worker
       : {}; // if in node js
 
@@ -14,7 +14,7 @@ var _self =
  * @author Lea Verou http://lea.verou.me
  */
 
-var Prism = (function() {
+var Prism = (function () {
   // Private helper vars
   var lang = /\blang(?:uage)?-([\w-]+)\b/i;
   var uniqueId = 0;
@@ -24,12 +24,12 @@ var Prism = (function() {
     disableWorkerMessageHandler:
       _self.Prism && _self.Prism.disableWorkerMessageHandler,
     util: {
-      encode: function(tokens) {
+      encode: function (tokens) {
         if (tokens instanceof Token) {
           return new Token(
             tokens.type,
             _.util.encode(tokens.content),
-            tokens.alias
+            tokens.alias,
           );
         } else if (_.util.type(tokens) === "Array") {
           return tokens.map(_.util.encode);
@@ -41,11 +41,11 @@ var Prism = (function() {
         }
       },
 
-      type: function(o) {
+      type: function (o) {
         return Object.prototype.toString.call(o).match(/\[object (\w+)\]/)[1];
       },
 
-      objId: function(obj) {
+      objId: function (obj) {
         if (!obj["__id"]) {
           Object.defineProperty(obj, "__id", { value: ++uniqueId });
         }
@@ -53,7 +53,7 @@ var Prism = (function() {
       },
 
       // Deep clone a language definition (e.g. to extend it)
-      clone: function(o, visited) {
+      clone: function (o, visited) {
         var type = _.util.type(o);
         visited = visited || {};
 
@@ -80,7 +80,7 @@ var Prism = (function() {
             var clone = [];
             visited[_.util.objId(o)] = clone;
 
-            o.forEach(function(v, i) {
+            o.forEach(function (v, i) {
               clone[i] = _.util.clone(v, visited);
             });
 
@@ -88,11 +88,11 @@ var Prism = (function() {
         }
 
         return o;
-      }
+      },
     },
 
     languages: {
-      extend: function(id, redef) {
+      extend: function (id, redef) {
         var lang = _.util.clone(_.languages[id]);
 
         for (var key in redef) {
@@ -111,7 +111,7 @@ var Prism = (function() {
        * @param insert Object with the key/value pairs to insert
        * @param root The object that contains `inside`. If equal to Prism.languages, it can be omitted.
        */
-      insertBefore: function(inside, before, insert, root) {
+      insertBefore: function (inside, before, insert, root) {
         root = root || _.languages;
         var grammar = root[inside];
 
@@ -147,7 +147,7 @@ var Prism = (function() {
         root[inside] = ret;
 
         // Update references in other language definitions
-        _.languages.DFS(_.languages, function(key, value) {
+        _.languages.DFS(_.languages, function (key, value) {
           if (value === old && key != inside) {
             this[key] = ret;
           }
@@ -157,7 +157,7 @@ var Prism = (function() {
       },
 
       // Traverse a language definition with Depth First Search
-      DFS: function(o, callback, type, visited) {
+      DFS: function (o, callback, type, visited) {
         visited = visited || {};
         for (var i in o) {
           if (o.hasOwnProperty(i)) {
@@ -178,19 +178,19 @@ var Prism = (function() {
             }
           }
         }
-      }
+      },
     },
     plugins: {},
 
-    highlightAll: function(async, callback) {
+    highlightAll: function (async, callback) {
       _.highlightAllUnder(document, async, callback);
     },
 
-    highlightAllUnder: function(container, async, callback) {
+    highlightAllUnder: function (container, async, callback) {
       var env = {
         callback: callback,
         selector:
-          'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'
+          'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code',
       };
 
       _.hooks.run("before-highlightall", env);
@@ -202,7 +202,7 @@ var Prism = (function() {
       }
     },
 
-    highlightElement: function(element, async, callback) {
+    highlightElement: function (element, async, callback) {
       // Find language
       var language,
         grammar,
@@ -241,7 +241,7 @@ var Prism = (function() {
         element: element,
         language: language,
         grammar: grammar,
-        code: code
+        code: code,
       };
 
       _.hooks.run("before-sanity-check", env);
@@ -261,7 +261,7 @@ var Prism = (function() {
       if (async && _self.Worker) {
         var worker = new Worker(_.filename);
 
-        worker.onmessage = function(evt) {
+        worker.onmessage = function (evt) {
           env.highlightedCode = evt.data;
 
           _.hooks.run("before-insert", env);
@@ -277,8 +277,8 @@ var Prism = (function() {
           JSON.stringify({
             language: env.language,
             code: env.code,
-            immediateClose: true
-          })
+            immediateClose: true,
+          }),
         );
       } else {
         env.highlightedCode = _.highlight(env.code, env.grammar, env.language);
@@ -295,11 +295,11 @@ var Prism = (function() {
       }
     },
 
-    highlight: function(text, grammar, language) {
+    highlight: function (text, grammar, language) {
       var env = {
         code: text,
         grammar: grammar,
-        language: language
+        language: language,
       };
       _.hooks.run("before-tokenize", env);
       env.tokens = _.tokenize(env.code, env.grammar);
@@ -307,14 +307,14 @@ var Prism = (function() {
       return Token.stringify(_.util.encode(env.tokens), env.language);
     },
 
-    matchGrammar: function(
+    matchGrammar: function (
       text,
       strarr,
       grammar,
       index,
       startPos,
       oneshot,
-      target
+      target,
     ) {
       var Token = _.Token;
 
@@ -436,7 +436,7 @@ var Prism = (function() {
               inside ? _.tokenize(match, inside) : match,
               alias,
               match,
-              greedy
+              greedy,
             );
 
             args.push(wrapped);
@@ -456,7 +456,7 @@ var Prism = (function() {
       }
     },
 
-    tokenize: function(text, grammar, language) {
+    tokenize: function (text, grammar, language) {
       var strarr = [text];
 
       var rest = grammar.rest;
@@ -477,7 +477,7 @@ var Prism = (function() {
     hooks: {
       all: {},
 
-      add: function(name, callback) {
+      add: function (name, callback) {
         var hooks = _.hooks.all;
 
         hooks[name] = hooks[name] || [];
@@ -485,7 +485,7 @@ var Prism = (function() {
         hooks[name].push(callback);
       },
 
-      run: function(name, env) {
+      run: function (name, env) {
         var callbacks = _.hooks.all[name];
 
         if (!callbacks || !callbacks.length) {
@@ -495,11 +495,11 @@ var Prism = (function() {
         for (var i = 0, callback; (callback = callbacks[i++]); ) {
           callback(env);
         }
-      }
-    }
+      },
+    },
   });
 
-  var Token = (_.Token = function(type, content, alias, matchedStr, greedy) {
+  var Token = (_.Token = function (type, content, alias, matchedStr, greedy) {
     this.type = type;
     this.content = content;
     this.alias = alias;
@@ -508,14 +508,14 @@ var Prism = (function() {
     this.greedy = !!greedy;
   });
 
-  Token.stringify = function(o, language, parent) {
+  Token.stringify = function (o, language, parent) {
     if (typeof o == "string") {
       return o;
     }
 
     if (_.util.type(o) === "Array") {
       return o
-        .map(function(element) {
+        .map(function (element) {
           return Token.stringify(element, language, o);
         })
         .join("");
@@ -528,7 +528,7 @@ var Prism = (function() {
       classes: ["token", o.type],
       attributes: {},
       language: language,
-      parent: parent
+      parent: parent,
     };
 
     if (o.alias) {
@@ -539,7 +539,7 @@ var Prism = (function() {
     _.hooks.run("wrap", env);
 
     var attributes = Object.keys(env.attributes)
-      .map(function(name) {
+      .map(function (name) {
         return (
           name +
           '="' +
@@ -574,7 +574,7 @@ var Prism = (function() {
       // In worker
       _self.addEventListener(
         "message",
-        function(evt) {
+        function (evt) {
           var message = JSON.parse(evt.data),
             lang = message.language,
             code = message.code,
@@ -585,7 +585,7 @@ var Prism = (function() {
             _self.close();
           }
         },
-        false
+        false,
       );
     }
 
@@ -627,29 +627,33 @@ if (typeof global !== "undefined") {
 Prism.languages.python = {
   comment: {
     pattern: /(^|[^\\])#.*/,
-    lookbehind: true
+    lookbehind: true,
   },
   "triple-quoted-string": {
     pattern: /("""|''')[\s\S]+?\1/,
     greedy: true,
-    alias: "string"
+    alias: "string",
   },
   string: {
     pattern: /("|')(?:\\.|(?!\1)[^\\\r\n])*\1/,
-    greedy: true
+    greedy: true,
   },
   function: {
     pattern: /((?:^|\s)def[ \t]+)[a-zA-Z_]\w*(?=\s*\()/g,
-    lookbehind: true
+    lookbehind: true,
   },
   "class-name": {
     pattern: /(\bclass\s+)\w+/i,
-    lookbehind: true
+    lookbehind: true,
   },
-  keyword: /\b(?:as|assert|async|await|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|nonlocal|pass|print|raise|return|try|while|with|yield)\b/,
-  builtin: /\b(?:__import__|abs|all|any|apply|ascii|basestring|bin|bool|buffer|bytearray|bytes|callable|chr|classmethod|cmp|coerce|compile|complex|delattr|dict|dir|divmod|enumerate|eval|execfile|file|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|intern|isinstance|issubclass|iter|len|list|locals|long|map|max|memoryview|min|next|object|oct|open|ord|pow|property|range|raw_input|reduce|reload|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|unichr|unicode|vars|xrange|zip)\b/,
+  keyword:
+    /\b(?:as|assert|async|await|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|nonlocal|pass|print|raise|return|try|while|with|yield)\b/,
+  builtin:
+    /\b(?:__import__|abs|all|any|apply|ascii|basestring|bin|bool|buffer|bytearray|bytes|callable|chr|classmethod|cmp|coerce|compile|complex|delattr|dict|dir|divmod|enumerate|eval|execfile|file|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|intern|isinstance|issubclass|iter|len|list|locals|long|map|max|memoryview|min|next|object|oct|open|ord|pow|property|range|raw_input|reduce|reload|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|unichr|unicode|vars|xrange|zip)\b/,
   boolean: /\b(?:True|False|None)\b/,
-  number: /(?:\b(?=\d)|\B(?=\.))(?:0[bo])?(?:(?:\d|0x[\da-f])[\da-f]*\.?\d*|\.\d+)(?:e[+-]?\d+)?j?\b/i,
-  operator: /[-+%=]=?|!=|\*\*?=?|\/\/?=?|<[<=>]?|>[=>]?|[&|^~]|\b(?:or|and|not)\b/,
-  punctuation: /[{}[\];(),.:]/
+  number:
+    /(?:\b(?=\d)|\B(?=\.))(?:0[bo])?(?:(?:\d|0x[\da-f])[\da-f]*\.?\d*|\.\d+)(?:e[+-]?\d+)?j?\b/i,
+  operator:
+    /[-+%=]=?|!=|\*\*?=?|\/\/?=?|<[<=>]?|>[=>]?|[&|^~]|\b(?:or|and|not)\b/,
+  punctuation: /[{}[\];(),.:]/,
 };

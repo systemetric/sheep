@@ -1,14 +1,15 @@
 <template>
-    <div class="sidebar" :class="{hidden: !visible, right: right}">
-        <slot></slot>
-        <div class="hide-button">
-            <IconButton
-                    @click="toggle"
-                    tooltip="Toggle">
-                <FontAwesomeIcon :icon="['fas', 'chevron-left']" :rotation="iconRotation"/>
-            </IconButton>
-        </div>
+  <div class="sidebar" :class="{ hidden: !visible, right: right }">
+    <slot></slot>
+    <div class="hide-button">
+      <IconButton @click="toggle" tooltip="Toggle">
+        <FontAwesomeIcon
+          :icon="['fas', 'chevron-left']"
+          :rotation="iconRotation"
+        />
+      </IconButton>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -21,35 +22,35 @@ export default Vue.extend({
   props: {
     right: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      visible: true
-    }
+      visible: true,
+    };
   },
   computed: {
     iconRotation() {
-      if((this as any).right) {
+      if ((this as any).right) {
         return (this as any).visible ? 180 : 0;
       } else {
         return (this as any).visible ? 0 : 180;
       }
-    }
+    },
   },
   methods: {
     toggle() {
       this.visible = !this.visible;
       this.$store.commit(MUTATION_SET_SIDEBAR_HIDDEN, {
         right: (this as any).right,
-        hidden: !this.visible
+        hidden: !this.visible,
       });
       setTimeout(() => {
         EventBus.$emit("resize");
       }, 50);
-    }
-  }
+    },
+  },
 });
 </script>
 

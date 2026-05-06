@@ -1,18 +1,18 @@
 <template>
-    <div class="dialog-container">
-         <div class="dialog">
-             <h1 class="title"><slot name="title"></slot></h1>
-             <div class="content"><slot></slot></div>
-             <div class="actions"><slot name="actions"></slot></div>
-         </div>
+  <div class="dialog-container">
+    <div class="dialog">
+      <h1 class="title"><slot name="title"></slot></h1>
+      <div class="content"><slot></slot></div>
+      <div class="actions"><slot name="actions"></slot></div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "dialog-wrapper"
+  name: "dialog-wrapper",
 });
 </script>
 

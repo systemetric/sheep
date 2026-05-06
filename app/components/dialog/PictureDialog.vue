@@ -1,12 +1,12 @@
 <template>
-    <div class="picture-dialog">
-        <div class="dialog">
-            <img :src="imageSrc" />
-            <div class="actions">
-                <button @click="$emit('close')">Close</button>
-            </div>
-        </div>
+  <div class="picture-dialog">
+    <div class="dialog">
+      <img :src="imageSrc" />
+      <div class="actions">
+        <button @click="$emit('close')">Close</button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -17,7 +17,7 @@ export default Vue.extend({
   name: "picture-dialog",
   computed: {
     ...mapState(["imageSrc"]),
-  }
+  },
 });
 </script>
 
@@ -55,8 +55,8 @@ export default Vue.extend({
     }
 
     .actions {
-        text-align: right;
-        margin-top: 0.5em;
+      text-align: right;
+      margin-top: 0.5em;
     }
   }
 }
