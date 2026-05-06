@@ -33,7 +33,7 @@ Vue.use(Vuex);
 export interface Project {
     filename: string;
     name: string;
-    content: string;
+    content: string | null;
     lastSaveContent?: string;
     blocklyGenerated?: string;
 }
@@ -45,9 +45,9 @@ export interface Project {
  * The currently opened document is assumed to be at that location which allows
  * the code completetion to work.
  */
-interface ProjectsResponse {
+interface FilesResponse {
     main: string;
-    projects: Project[];
+    files: string[];
     blocks: BlocksConfiguration;
 }
 
@@ -67,14 +67,16 @@ interface SidebarsHidden {
 }
 
 interface WebSockets {
-    socket: WebSocket | null;
-    socketUrl: string;
+    logSocket: WebSocket | null;
+    cameraSocket: WebSocket | null;
+    logSocketUrl: string;
+    cameraSocketUrl: string;
     reconnectInterval: number;
 }
 
 export interface RunConfiguration {
-    zone: number;
-    mode: "development" | "competition";
+    zone: "red" | "yellow" | "green" | "blue";
+    mode: "dev" | "comp";
 }
 
 // A "bucket" interface which holds all of the state of the program
@@ -118,7 +120,8 @@ const MUTATION_SHOW_MESSAGE = "SHOW_MESSAGE";
 export const MUTATION_DISMISS_MESSAGE = "DISMISS_MESSAGE";
 const MUTATION_RESET_TEXT_LOG_OUTPUT = "RESET_TEXT_LOG_OUTPUT";
 export const MUTATION_SET_SIDEBAR_HIDDEN = "SET_SIDEBAR_HIDDEN";
-const MUTATION_HANDLE_WEBSOCKET_MESSAGE = "WEBSOCKET_MESSAGE";
+const MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE = "LOG_WEBSOCKET_MESSAGE";
+const MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE = "CAMERA_WEBSOCKET_MESSAGE";
 export const MUTATION_SET_PICTURE_OPEN = "SET_PICTURE_OPEN";
 export const MUTATION_SET_RUN_CONFIG_OPEN = "SET_RUN_CONFIG_OPEN";
 export const MUTATION_SET_RUN_CONFIG = "SET_RUN_CONFIG";
@@ -133,7 +136,8 @@ export const ACTION_DELETE_PROJECT = "DELETE_PROJECT";
 export const ACTION_RUN_PROJECT = "RUN_PROJECT";
 export const ACTION_STOP_PROJECT = "STOP_PROJECT";
 export const ACTION_SHOW_MESSAGE = "SHOW_MESSAGE";
-export const ACTION_INIT_WEBSOCKETS = "INIT_WEBSOCKETS";
+export const ACTION_INIT_CAMERA_WEBSOCKET = "INIT_CAMERA_WEBSOCKET";
+export const ACTION_INIT_LOG_WEBSOCKET = "INIT_LOG_WEBSOCKET";
 export const ACTION_UPLOAD_TEAM_LOGO = "UPLOAD_TEAM_LOGO";
 
 // Messages which can be displayed to the user
@@ -214,16 +218,18 @@ export default new Vuex.Store<State>({
         lastImageUpdate: Date.now(),
         runConfigOpen: false,
         runConfig: {
-            zone: 0,
-            mode: "development",
+            zone: "red",
+            mode: "dev",
         },
         sidebarsHidden: {
             leftHidden: false,
             rightHidden: false,
         },
         sockets: {
-            socket: null,
-            socketUrl: "ws://" + window.location.hostname + ":5001/",
+            logSocket: null,
+            cameraSocket: null,
+            logSocketUrl: "ws://" + window.location.hostname + ":5001/robot/log",
+            cameraSocketUrl: "ws://" + window.location.hostname + ":5001/camera",
             reconnectInterval: 2000,
         },
     },
@@ -233,12 +239,21 @@ export default new Vuex.Store<State>({
         /**Unpacks the projects response ignoring the custom blocks definition
          * Sorts the projects using the compare function.
          */
-        [MUTATION_SET_PROJECTS](state: State, res: ProjectsResponse) {
+        [MUTATION_SET_PROJECTS](state: State, res: FilesResponse) {
             state.loaded = true;
             state.main = res.main;
-            state.projects = res.projects.filter(
-                (test) => test.filename !== "blocks.json"
-            );
+            state.projects = res.files
+                .filter((f) => f !== "blocks.json")
+                .map((f) => ({
+                    filename: f,
+                    name: _.startCase(
+                        f.substring(
+                            0,
+                            f.lastIndexOf(".")
+                        )
+                    ),
+                    content: null,
+                }));
             state.projects.sort(compareProjects);
             state.blocksConfiguration = res.blocks;
         },
@@ -247,12 +262,19 @@ export default new Vuex.Store<State>({
          * If not then adds the project to the list of currently open projects and
          * sets it as the currently open project
          */
-        [MUTATION_OPEN_PROJECT](state: State, filename?: string) {
+        async [MUTATION_OPEN_PROJECT](state: State, filename?: string) {
             const findProject = (project: Project) =>
                 project.filename === filename;
 
             let newProject = state.projects.find(findProject);
             if (!newProject) return;
+
+            if (newProject.content === null) {
+                newProject.content = await fetch(
+                        makeFullUrl(`/files/load/${newProject.filename}`)
+                    ).then((res) => res.json())
+                    .then((res: any) => res.content)
+            }
 
             if (!state.openProjects.find(findProject))
                 state.openProjects.push(newProject);
@@ -410,29 +432,27 @@ export default new Vuex.Store<State>({
             }
         },
 
-        [MUTATION_HANDLE_WEBSOCKET_MESSAGE](state: State, data: string) {
-            if (data.substring(0, 8) == "[CAMERA]") {
-                state.imageSrc = "data:image/png;base64," + data.substring(8);
-                state.lastImageUpdate = Date.now();
-                console.log("Image updated");
-                return;
-            }
+        [MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE](state: State, data: string) {
+            state.imageSrc = "data:image/png;base64," + data;
+            state.lastImageUpdate = Date.now();
+            console.log("Image updated");
+        },
 
+        [MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE](state: State, data: string) {
             // Handle the erase escape sequence from the server
-            if (data === "\x1b[2J\n") {
-                state.textLog = "";
+            if (data.includes("\x1b[2J")) {
+                state.textLog = data.slice(data.indexOf("\x1b[2J") + 4);
                 return;
             }
 
-            let log = data.substring(6);
-            if (state.textLog !== log) {
+            if (state.textLog !== data) {
                 if (state.textLogOutputState == 0) {
-                    if (log.trim() === "") state.textLogOutputState = 1;
+                    if (data.trim() === "") state.textLogOutputState = 1;
                 } else if (state.textLogOutputState == 1) {
-                    if (log.trim() !== "") state.textLogOutputState = 2;
+                    if (data.trim() !== "") state.textLogOutputState = 2;
                 }
             }
-            state.textLog += log;
+            state.textLog += data;
         },
 
         /**This just resets the log state for when a new program is to be run*/
@@ -468,17 +488,9 @@ export default new Vuex.Store<State>({
          * currently selected project
          */
         [ACTION_FETCH_PROJECTS]({ commit }) {
-            return fetch(makeFullUrl("/files/"))
+            return fetch(makeFullUrl("/files/list"))
                 .then((res) => res.json())
                 .then((res: any) => {
-                    res.projects.forEach((project: Project) => {
-                        project.name = _.startCase(
-                            project.filename.substring(
-                                0,
-                                project.filename.lastIndexOf(".")
-                            )
-                        );
-                    });
                     //TODO add a comment explaining this state
                     commit(MUTATION_SET_PROJECTS, res);
                     return true;
@@ -505,12 +517,14 @@ export default new Vuex.Store<State>({
 
         /**Upload a new team logo image*/
         [ACTION_UPLOAD_TEAM_LOGO]({ state }, file: File) {
+             const formData = new FormData();
+             formData.append("team-image.jpg", file);
+
              return fetch(
-                makeFullUrl("/upload/upload-image"),
+                makeFullUrl("/upload/team-image"),
                 {
                     method: "POST",
-                    headers: { "Content-Type": file.type },
-                    body: file,
+                    body: formData,
                 }
              )
         },
@@ -747,7 +761,7 @@ export default new Vuex.Store<State>({
                         });
                         commit(MUTATION_RESET_TEXT_LOG_OUTPUT);
 
-                        return fetch(makeFullUrl(`/upload/upload`), {
+                        return fetch(makeFullUrl(`/upload/file`), {
                             method: "POST",
                             body: uploadFormData,
                         });
@@ -762,19 +776,15 @@ export default new Vuex.Store<State>({
                         await wait(1000);
                     })
                     .then(() => {
-                        const runFormData = new FormData();
-                        runFormData.append(
-                            "zone",
-                            state.runConfig.zone.toString()
-                        );
-                        runFormData.append(
-                            "mode",
-                            state.runConfig.mode.toString()
-                        );
+                        const runData = {
+                            zone: state.runConfig.zone.toString(),
+                            mode: state.runConfig.mode.toString(),
+                        };
 
-                        return fetch(makeFullUrl(`/run/start`), {
+                        return fetch(makeFullUrl(`/control/start`), {
                             method: "POST",
-                            body: runFormData,
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(runData),
                         });
                     })
                     .then(() => commit(MUTATION_SET_RUNNING, false))
@@ -793,7 +803,7 @@ export default new Vuex.Store<State>({
                 icon: "info-circle",
             });
 
-            return fetch(makeFullUrl(`/run/stop`), {
+            return fetch(makeFullUrl(`/control/stop`), {
                 method: "POST",
             });
         },
@@ -819,23 +829,66 @@ export default new Vuex.Store<State>({
             }, 5000);
         },
 
-        [ACTION_INIT_WEBSOCKETS]({ state }) {
-            state.sockets.socket = new WebSocket(state.sockets.socketUrl);
-            state.sockets.socket.onopen = () => {
-                console.log("WebSocket connection established");
+        [ACTION_INIT_CAMERA_WEBSOCKET]({ state }) {
+            state.sockets.cameraSocket = new WebSocket(state.sockets.cameraSocketUrl);
+            state.sockets.cameraSocket.onopen = () => {
+                console.log("camera websocket connection established");
             };
-            state.sockets.socket.onmessage = ({ data }) => {
-                this.commit(MUTATION_HANDLE_WEBSOCKET_MESSAGE, data);
+            state.sockets.cameraSocket.onmessage = ({ data }) => {
+                if (data instanceof Blob) {
+                    const reader = new FileReader();
+
+                    reader.onload = () => {
+                        const text = reader.result as string;
+                        this.commit(MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE, text);
+                    };
+
+                    reader.readAsText(data);
+                } else {
+                    this.commit(MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE, data);
+                }
             };
-            state.sockets.socket.onerror = (event) => {
-                console.log("WebSocket error: ", event);
+            state.sockets.cameraSocket.onerror = (event) => {
+                console.log("camera websocket error: ", event);
             };
-            state.sockets.socket.onclose = (event) => {
+            state.sockets.cameraSocket.onclose = (event) => {
                 console.log(
-                    `WebSocket connection closed with code ${event.code}. Reconnecting in ${state.sockets.reconnectInterval}ms...`
+                    `camera websocket connection closed with code ${event.code}. Reconnecting in ${state.sockets.reconnectInterval}ms...`
                 );
                 setTimeout(() => {
-                    this.dispatch(ACTION_INIT_WEBSOCKETS);
+                    this.dispatch(ACTION_INIT_CAMERA_WEBSOCKET);
+                }, state.sockets.reconnectInterval);
+            };
+        },
+
+        [ACTION_INIT_LOG_WEBSOCKET]({ state }) {
+            state.sockets.logSocket = new WebSocket(state.sockets.logSocketUrl);
+            state.sockets.logSocket.onopen = () => {
+                console.log("log websocket connection established");
+            };
+            state.sockets.logSocket.onmessage = ({ data }) => {
+                if (data instanceof Blob) {
+                    const reader = new FileReader();
+
+                    reader.onload = () => {
+                        const text = reader.result as string;
+                        this.commit(MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE, text);
+                    };
+
+                    reader.readAsText(data);
+                } else {
+                    this.commit(MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE, data);
+                }
+            };
+            state.sockets.logSocket.onerror = (event) => {
+                console.log("log websocket error: ", event);
+            };
+            state.sockets.logSocket.onclose = (event) => {
+                console.log(
+                    `log websocket connection closed with code ${event.code}. Reconnecting in ${state.sockets.reconnectInterval}ms...`
+                );
+                setTimeout(() => {
+                    this.dispatch(ACTION_INIT_LOG_WEBSOCKET);
                 }, state.sockets.reconnectInterval);
             };
         },

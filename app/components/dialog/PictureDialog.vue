@@ -1,7 +1,7 @@
 <template>
     <div class="picture-dialog">
         <div class="dialog">
-            <img :src="imageUrl" />
+            <img :src="imageSrc" />
             <div class="actions">
                 <button @click="$emit('close')">Close</button>
             </div>
@@ -16,14 +16,7 @@ import { mapState } from "vuex";
 export default Vue.extend({
   name: "picture-dialog",
   computed: {
-    ...mapState(["lastImageUpdate", "pictureOpen"]),
-    imageUrl(): string {
-        if (this.pictureOpen) {
-            return `/run/picture?t=${this.lastImageUpdate}`;
-        } else {
-            return "";
-        }
-    }
+    ...mapState(["imageSrc"]),
   }
 });
 </script>
