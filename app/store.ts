@@ -682,12 +682,11 @@ export default new Vuex.Store<State>({
               blocks: [],
             };
 
-          /*const generated = `${blocksConfiguration.header}\n${
-            state.currentProject.blocklyGenerated
-          }\n${blocksConfiguration.footer}`;*/
-          const generated = state.currentProject.blocklyGenerated;
+          const content =
+            `#::sheep:project_name:${state.currentProject.name}\n` +
+            (state.currentProject.blocklyGenerated || "");
 
-          zip.file("main.py", generated || "");
+          zip.file("main.py", content);
 
           filesToPack = state.projects.filter(
             (project) =>
@@ -695,7 +694,10 @@ export default new Vuex.Store<State>({
               blocksConfiguration.requires.includes(project.filename),
           );
         } else {
-          zip.file("main.py", state.currentProject.content);
+          const content =
+            `#::sheep:project_name:${state.currentProject.name}\n` +
+            state.currentProject.content;
+          zip.file("main.py", content);
 
           filesToPack = state.projects.filter(
             (project) =>
