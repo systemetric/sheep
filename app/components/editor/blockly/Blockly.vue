@@ -17,7 +17,8 @@ import {
   MUTATION_UPDATE_PROJECT,
   Project,
 } from "../../../store";
-const Blockly = require("node-blockly/browser");
+const Blockly = require("blockly/browser");
+import "blockly/python";
 import loadBlocks from "./blocks";
 import loadCustomBlocks from "./block-loader";
 import toolbox from "./toolbox.xml";

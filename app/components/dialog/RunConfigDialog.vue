@@ -4,7 +4,7 @@
     <div>
       <fieldset style="margin-bottom: 1em">
         <legend>Zone</legend>
-        <label v-for="color in zones" :key="n">
+        <label v-for="color in zones">
           <input type="radio" :value="color" v-model="zone" />
           {{ color }}
         </label>

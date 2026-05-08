@@ -69,6 +69,7 @@ import PictureDialog from "./components/dialog/PictureDialog.vue";
 import RunConfigDialog from "./components/dialog/RunConfigDialog.vue";
 // @ts-ignore
 import Prism from "vue-prism-component";
+import "prismjs/components/prism-python";
 // @ts-ignore
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 

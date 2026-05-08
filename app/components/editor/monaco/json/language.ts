@@ -8,7 +8,7 @@ monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
   schemas: [
     {
       uri: "http://robot.go/blocks-schema.json",
-      fileMatch: ["*.py"],
+      fileMatch: ["*.json"],
       schema: schema,
     },
   ],
