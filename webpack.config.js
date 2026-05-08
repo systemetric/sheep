@@ -13,74 +13,70 @@ module.exports = {
   entry: "./app/index.ts",
   devtool: "inline-source-map",
   output: {
-    path: (isShepherd ?
-      path.resolve(
-        __dirname,
-        "..",
-        "static",
-        "editor"
-      )
-    : path.resolve(
-        __dirname,
-        "..",
-        "manuallybuiltsheep"
-      )),
-    filename: "bundle.js"
+    path: isShepherd
+      ? path.resolve(__dirname, "..", "static", "editor")
+      : path.resolve(__dirname, "..", "manuallybuiltsheep"),
+    filename: "bundle.js",
   },
   optimization: {
-   minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})]
+    minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
   },
   module: {
     rules: [
       {
         test: /\.vue$/,
-        loader: "vue-loader"
+        loader: "vue-loader",
       },
       {
         test: /\.tsx?$/,
         loader: "ts-loader",
         options: {
-          appendTsSuffixTo: ["\\.vue$"]
+          appendTsSuffixTo: ["\\.vue$"],
         },
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
           dev ? "vue-style-loader" : MiniCssExtractPlugin.loader,
           "css-loader",
-          "sass-loader"
-        ]
+          {
+            loader: "sass-loader",
+            options: {
+              silenceDeprecations: ["import", "legacy-js-api"],
+            },
+          },
+        ],
       },
       {
         test: /\.svg$/,
-        loader: "svg-url-loader"
+        loader: "svg-url-loader",
       },
       {
         test: /\.xml$/,
-        loader: "raw-loader"
-      }
-    ]
+        loader: "raw-loader",
+      },
+    ],
   },
   resolve: {
     alias: {
       vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility"),
       "@": path.join(__dirname, "app"),
-      vue$: "vue/dist/vue.runtime.esm.js"
+      vue$: "vue/dist/vue.runtime.esm.js",
     },
-    extensions: [".js", ".jsx", ".vue", ".json", ".ts", ".tsx"]
+    extensions: [".js", ".jsx", ".vue", ".json", ".ts", ".tsx"],
   },
   plugins: [
     new MonacoWebpackPlugin({
-      languages: ["json"]
+      languages: ["json", "python"],
     }),
     new MiniCssExtractPlugin({
-      filename: "style.css"
+      filename: "style.css",
     }),
     new HtmlWebpackPlugin({
-      template: "./app/template.html"
+      template: "./app/template.html",
     }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
   ],
   node: {
     fs: "empty",
@@ -92,6 +88,6 @@ module.exports = {
     process: true,
     module: false,
     clearImmediate: false,
-    setImmediate: true
-  }
+    setImmediate: true,
+  },
 };
