@@ -6,6 +6,7 @@ import store, {
   ACTION_FETCH_PROJECTS,
   ACTION_INIT_LOG_WEBSOCKET,
   ACTION_INIT_CAMERA_WEBSOCKET,
+  ACTION_INIT_STATUS_WEBSOCKET,
   ACTION_RUN_PROJECT,
   ACTION_SAVE_PROJECT,
   ACTION_STOP_PROJECT,
@@ -50,6 +51,8 @@ library.add(
 import App from "./App.vue";
 
 import IconButton from "./components/IconButton.vue";
+import LED from "./components/LED.vue";
+import Status from "./components/Status.vue";
 import Messages from "./components/Messages.vue";
 import Editor from "./components/editor/Editor.vue";
 import Tabs from "./components/editor/Tabs.vue";
@@ -67,6 +70,7 @@ import CreateProjectDialog from "./components/dialog/CreateProjectDialog.vue";
 import DeleteProjectDialog from "./components/dialog/DeleteProjectDialog.vue";
 import PictureDialog from "./components/dialog/PictureDialog.vue";
 import RunConfigDialog from "./components/dialog/RunConfigDialog.vue";
+import StatusDialog from "./components/dialog/StatusDialog.vue";
 // @ts-ignore
 import Prism from "vue-prism-component";
 import "prismjs/components/prism-python";
@@ -77,6 +81,8 @@ import VueSplit from "vue-split-panel";
 Vue.use(VueSplit);
 
 Vue.component("IconButton", IconButton);
+Vue.component("LED", LED);
+Vue.component("Status", Status);
 Vue.component("Messages", Messages);
 Vue.component("Editor", Editor);
 Vue.component("Tabs", Tabs);
@@ -94,6 +100,7 @@ Vue.component("CreateProjectDialog", CreateProjectDialog);
 Vue.component("DeleteProjectDialog", DeleteProjectDialog);
 Vue.component("PictureDialog", PictureDialog);
 Vue.component("RunConfigDialog", RunConfigDialog);
+Vue.component("StatusDialog", StatusDialog);
 Vue.component("Prism", Prism);
 Vue.component("FontAwesomeIcon", FontAwesomeIcon);
 
@@ -114,6 +121,11 @@ store.dispatch(ACTION_INIT_LOG_WEBSOCKET).catch((e) => {
 });
 
 store.dispatch(ACTION_INIT_CAMERA_WEBSOCKET).catch((e) => {
+  console.error(e);
+  init();
+});
+
+store.dispatch(ACTION_INIT_STATUS_WEBSOCKET).catch((e) => {
   console.error(e);
   init();
 });

@@ -69,14 +69,38 @@ interface SidebarsHidden {
 interface WebSockets {
   logSocket: WebSocket | null;
   cameraSocket: WebSocket | null;
+  statusSocket: WebSocket | null;
   logSocketUrl: string;
   cameraSocketUrl: string;
+  statusSocketUrl: string;
   reconnectInterval: number;
 }
 
 export interface RunConfiguration {
   zone: "red" | "yellow" | "green" | "blue";
   mode: "dev" | "comp";
+}
+
+export type Status = "online" | "offline" | "unknown";
+// critical sevrices that must be online for us to be good
+export const EXPECTED_SERVICES = [
+  "hopper",
+  "shepherd-app",
+  "shepherd-run",
+  "shepherd-watch",
+  "shepherd-ws",
+];
+export const SERVICE_NOTES = {
+  "shepherd-app": "Web interface",
+  "shepherd-run": "Code runner",
+  "shepherd-watch": "Status information",
+  "shepherd-ws": "Logs and images",
+  hopper: "Logs and images",
+};
+
+export interface StatusSummary {
+  statusColour: string;
+  statuses: Record<string, Status>;
 }
 
 // A "bucket" interface which holds all of the state of the program
@@ -100,6 +124,8 @@ interface State {
   lastImageUpdate: number;
   runConfigOpen: boolean;
   runConfig: RunConfiguration;
+  status: StatusSummary;
+  statusOpen: boolean;
   sidebarsHidden: SidebarsHidden;
   sockets: WebSockets;
 }
@@ -122,9 +148,11 @@ const MUTATION_RESET_TEXT_LOG_OUTPUT = "RESET_TEXT_LOG_OUTPUT";
 export const MUTATION_SET_SIDEBAR_HIDDEN = "SET_SIDEBAR_HIDDEN";
 const MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE = "LOG_WEBSOCKET_MESSAGE";
 const MUTATION_HANDLE_CAMERA_WEBSOCKET_MESSAGE = "CAMERA_WEBSOCKET_MESSAGE";
+const MUTATION_HANDLE_STATUS_WEBSOCKET_MESSAGE = "STATUS_WEBSOCKET_MESSAGE";
 export const MUTATION_SET_PICTURE_OPEN = "SET_PICTURE_OPEN";
 export const MUTATION_SET_RUN_CONFIG_OPEN = "SET_RUN_CONFIG_OPEN";
 export const MUTATION_SET_RUN_CONFIG = "SET_RUN_CONFIG";
+export const MUTATION_SET_STATUS_OPEN = "SET_STATUS_OPEN";
 
 // Actions which the user can take which cause mutations
 export const ACTION_FETCH_PROJECTS = "FETCH_PROJECTS";
@@ -138,6 +166,7 @@ export const ACTION_STOP_PROJECT = "STOP_PROJECT";
 export const ACTION_SHOW_MESSAGE = "SHOW_MESSAGE";
 export const ACTION_INIT_CAMERA_WEBSOCKET = "INIT_CAMERA_WEBSOCKET";
 export const ACTION_INIT_LOG_WEBSOCKET = "INIT_LOG_WEBSOCKET";
+export const ACTION_INIT_STATUS_WEBSOCKET = "INIT_STATUS_WEBSOCKET";
 export const ACTION_UPLOAD_TEAM_LOGO = "UPLOAD_TEAM_LOGO";
 
 // Messages which can be displayed to the user
@@ -215,11 +244,18 @@ export default new Vuex.Store<State>({
       leftHidden: false,
       rightHidden: false,
     },
+    status: {
+      statusColour: "#ff2500",
+      statuses: {},
+    },
+    statusOpen: false,
     sockets: {
       logSocket: null,
       cameraSocket: null,
+      statusSocket: null,
       logSocketUrl: `ws://${window.location.hostname}:5001/robot/log`,
       cameraSocketUrl: `ws://${window.location.hostname}:5001/camera`,
+      statusSocketUrl: `ws://${window.location.hostname}:10100`,
       reconnectInterval: 2000,
     },
   },
@@ -431,6 +467,52 @@ export default new Vuex.Store<State>({
         }
       }
       state.textLog += data;
+    },
+
+    [MUTATION_HANDLE_STATUS_WEBSOCKET_MESSAGE](state: State, data: any) {
+      console.log(data);
+
+      if (data.statuses === null) {
+        state.status.statusColour = "#ff2500";
+
+        // if the watchdog is gone, we don't know the status of anything
+        Object.keys(state.status.statuses).forEach((s) => {
+          Vue.set(
+            state.status.statuses,
+            s,
+            s === "shepherd-watch" ? "offline" : "unknown",
+          );
+        });
+
+        return;
+      }
+
+      let statusColour = "#0b0";
+      data.statuses.forEach((status) => {
+        Vue.set(state.status.statuses, status.service, status.status);
+      });
+
+      Object.keys(state.status.statuses).forEach((s) => {
+        if (state.status.statuses[s] !== "online") {
+          statusColour = "#ff8c00";
+        }
+      });
+
+      for (const s of EXPECTED_SERVICES) {
+        if (!(s in state.status.statuses)) {
+          Vue.set(state.status.statuses, s, "unknown");
+          statusColour = "#ff2500";
+        } else if (state.status.statuses[s] !== "online") {
+          statusColour = "#ff2500";
+        }
+      }
+
+      state.status.statusColour = statusColour;
+    },
+
+    // Set the state of the status dialog
+    [MUTATION_SET_STATUS_OPEN](state: State, open: boolean) {
+      state.statusOpen = open;
     },
 
     /**This just resets the log state for when a new program is to be run*/
@@ -852,6 +934,34 @@ export default new Vuex.Store<State>({
         );
         setTimeout(() => {
           this.dispatch(ACTION_INIT_LOG_WEBSOCKET);
+        }, state.sockets.reconnectInterval);
+      };
+    },
+
+    [ACTION_INIT_STATUS_WEBSOCKET]({ state }) {
+      state.sockets.statusSocket = new WebSocket(state.sockets.statusSocketUrl);
+      state.sockets.statusSocket.onopen = () => {
+        console.log("status websocket connection established");
+      };
+      state.sockets.statusSocket.onmessage = ({ data }) => {
+        const res = { statuses: JSON.parse(data).statuses };
+        this.commit(MUTATION_HANDLE_STATUS_WEBSOCKET_MESSAGE, res);
+      };
+      state.sockets.statusSocket.onerror = (event) => {
+        const res = { statuses: null };
+        this.commit(MUTATION_HANDLE_STATUS_WEBSOCKET_MESSAGE, res);
+
+        console.log("status websocket error: ", event);
+      };
+      state.sockets.statusSocket.onclose = (event) => {
+        const res = { statuses: null };
+        this.commit(MUTATION_HANDLE_STATUS_WEBSOCKET_MESSAGE, res);
+
+        console.log(
+          `status websocket connection closed with code ${event.code}. Reconnecting in ${state.sockets.reconnectInterval}ms...`,
+        );
+        setTimeout(() => {
+          this.dispatch(ACTION_INIT_STATUS_WEBSOCKET);
         }, state.sockets.reconnectInterval);
       };
     },

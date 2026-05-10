@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="project-list">
     <ProjectTab key="header" name="Projects" :header="true">
       <IconButton v-if="saving" class="disabled" tooltip="Saving...">
         <FontAwesomeIcon :icon="['fas', 'sync-alt']" spin />
@@ -36,6 +36,7 @@
         <FontAwesomeIcon :icon="['fas', 'trash']" />
       </IconButton>
     </ProjectTab>
+    <Status class="status-footer" />
   </div>
 </template>
 
@@ -83,4 +84,15 @@ export default Vue.extend({
 });
 </script>
 
-<style></style>
+<style lang="scss">
+.project-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.status-footer {
+  margin-top: auto;
+  margin-bottom: 5px;
+}
+</style>

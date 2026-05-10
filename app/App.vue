@@ -32,6 +32,7 @@
       />
       <PictureDialog @close="closePicture" v-show="pictureOpen" />
       <RunConfigDialog @close="closeRunConfig" v-show="runConfigOpen" />
+      <StatusDialog @close="closeStatus" v-show="statusOpen" />
     </template>
     <div v-else class="empty-state">
       <FontAwesomeIcon :icon="['fas', 'exclamation-triangle']" size="10x" />
@@ -48,6 +49,7 @@ import {
   MUTATION_SET_CREATE_OPEN,
   MUTATION_SET_PICTURE_OPEN,
   MUTATION_SET_RUN_CONFIG_OPEN,
+  MUTATION_SET_STATUS_OPEN,
   Project,
   saveProject,
 } from "./store";
@@ -77,7 +79,13 @@ export default Vue.extend({
       }
     }
   },
-  computed: mapState(["loaded", "createOpen", "pictureOpen", "runConfigOpen"]),
+  computed: mapState([
+    "loaded",
+    "createOpen",
+    "pictureOpen",
+    "runConfigOpen",
+    "statusOpen",
+  ]),
   methods: {
     openCreate() {
       this.$store.commit(MUTATION_SET_CREATE_OPEN, true);
@@ -93,6 +101,9 @@ export default Vue.extend({
     },
     closeRunConfig() {
       this.$store.commit(MUTATION_SET_RUN_CONFIG_OPEN, false);
+    },
+    closeStatus() {
+      this.$store.commit(MUTATION_SET_STATUS_OPEN, false);
     },
     splitPaneDragEnd(size) {
       this.splitSizes = this.$refs.splitPane.getSizes();

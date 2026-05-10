@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-container">
-    <div class="dialog">
+    <div class="dialog" :style="{ width: width, maxWidth: maxWidth }">
       <h1 class="title"><slot name="title"></slot></h1>
       <div class="content"><slot></slot></div>
       <div class="actions"><slot name="actions"></slot></div>
@@ -13,6 +13,16 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "dialog-wrapper",
+  props: {
+    width: {
+      type: String,
+      default: "300px",
+    },
+    maxWidth: {
+      type: String,
+      default: "300px",
+    },
+  },
 });
 </script>
 
@@ -31,7 +41,6 @@ export default Vue.extend({
   justify-content: center;
 
   .dialog {
-    width: 300px;
     background-color: #1e1e1e;
     padding: 16px;
 
