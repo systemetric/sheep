@@ -470,8 +470,6 @@ export default new Vuex.Store<State>({
     },
 
     [MUTATION_HANDLE_STATUS_WEBSOCKET_MESSAGE](state: State, data: any) {
-      console.log(data);
-
       if (data.statuses === null) {
         state.status.statusColour = "#ff2500";
 

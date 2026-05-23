@@ -59,11 +59,6 @@ export default Vue.extend({
   mounted() {
     loadBlocks(Blockly);
 
-    /*const robotToolbox = loadCustomBlocks(
-      Blockly,
-      (this as any).blocksConfiguration.blocks
-    );*/
-
     this.workspace = Blockly.inject(this.$refs.blockly, {
       toolbox: toolbox,
       trashcan: false,
@@ -88,18 +83,23 @@ export default Vue.extend({
       // I apologise in advance - this is gonna be hacky...
       let definesAtStart: string[] = [];
       let pwmUses =
-        blocklyGeneratedCode.match(/R\.servos\[[0-3]\]\ \=\ /g) || [];
+        blocklyGeneratedCode.match(/I\.servos\[[0-3]\]\ \=\ /g) || [];
       for (let i = 0; i < pwmUses.length; i++) {
         let pwmIndex = pwmUses[i][9];
-        let pythonLine = `R.servos[${pwmIndex}].mode = PWM_SERVO`;
+        let pythonLine = `I.servos[${pwmIndex}].mode = PWM_SERVO`;
         if (!definesAtStart.includes(pythonLine)) {
           definesAtStart.push(pythonLine);
         }
       }
-      this.code = `from robot import *
+      this.code = `import robocon
+from robocon.brain import *
+from robocon.vision import *
+from robocon.game import *
 import time
 
-R = Robot()
+I = IO()
+C = Camera()
+
 ${definesAtStart.join("\n")}
 
 ${blocklyGeneratedCode}

@@ -179,7 +179,7 @@ function loadMovementBlocks(Blockly) {
       "MOTOR_PERCENT",
       Blockly.Python.ORDER_ATOMIC,
     );
-    return `R.motors[${number_motor_index}] = ${value_motor_percent}\n`;
+    return `I.motors[${number_motor_index}] = ${value_motor_percent}\n`;
   };
 
   Blockly.Python["motors_move_for_time"] = function (block) {
@@ -196,11 +196,11 @@ function loadMovementBlocks(Blockly) {
     );
     const sign = dropdown_motors_direction === "FORWARDS" ? "" : "-";
     return [
-      `R.motors[0] = ${sign}${value_motors_power_percent}`,
-      `R.motors[1] = ${sign}${value_motors_power_percent}`,
+      `I.motors[0] = ${sign}${value_motors_power_percent}`,
+      `I.motors[1] = ${sign}${value_motors_power_percent}`,
       `time.sleep(${value_motors_time})`,
-      `R.motors[0] = 0`,
-      `R.motors[1] = 0`,
+      `I.motors[0] = 0`,
+      `I.motors[1] = 0`,
       "",
     ].join("\n");
   };
@@ -220,17 +220,17 @@ function loadMovementBlocks(Blockly) {
     const first_sign = dropdown_motors_direction === "CLOCKWISE" ? "" : "-";
     const second_sign = dropdown_motors_direction === "CLOCKWISE" ? "-" : "";
     return [
-      `R.motors[0] = ${first_sign}${value_motors_power}`,
-      `R.motors[1] = ${second_sign}${value_motors_power}`,
+      `I.motors[0] = ${first_sign}${value_motors_power}`,
+      `I.motors[1] = ${second_sign}${value_motors_power}`,
       `time.sleep(${value_motors_time})`,
-      `R.motors[0] = 0`,
-      `R.motors[1] = 0`,
+      `I.motors[0] = 0`,
+      `I.motors[1] = 0`,
       "",
     ].join("\n");
   };
 
   Blockly.Python["motors_reset"] = function () {
-    return "R.motors[0] = 0\nR.motors[1] = 0\n";
+    return "I.motors[0] = 0\nI.motors[1] = 0\n";
   };
 
   /*Blockly.Python["motors_safety_override"] = function() {
@@ -244,11 +244,11 @@ function loadMovementBlocks(Blockly) {
       "SERVO_POSITION",
       Blockly.Python.ORDER_ATOMIC,
     );
-    return `R.servos[${number_servo_index}] = ${value_servo_position}\n`;
+    return `I.servos[${number_servo_index}] = ${value_servo_position}\n`;
   };
 
   Blockly.Python["zone"] = function () {
-    const code = "R.zone";
+    const code = "robocon.ZONE";
     return [code, Blockly.Python.ORDER_NONE];
   };
 }
@@ -321,7 +321,7 @@ function loadGPIOBlocks(Blockly) {
   Blockly.Python["gpio_set_mode"] = function (block) {
     const number_gpio_index = block.getFieldValue("GPIO_INDEX");
     const dropdown_gpio_mode = block.getFieldValue("GPIO_MODE");
-    return `R.gpio[${number_gpio_index}].mode = ${dropdown_gpio_mode}\n`;
+    return `I.gpio[${number_gpio_index}].mode = ${dropdown_gpio_mode}\n`;
   };
 
   Blockly.Python["gpio_write_digital"] = function (block) {
@@ -331,18 +331,18 @@ function loadGPIOBlocks(Blockly) {
       "GPIO_STATE",
       Blockly.Python.ORDER_ATOMIC,
     );
-    return `R.gpio[${number_gpio_index}].digital = ${value_gpio_state}\n`;
+    return `I.gpio[${number_gpio_index}].digital = ${value_gpio_state}\n`;
   };
 
   Blockly.Python["gpio_read_digital"] = function (block) {
     const number_gpio_index = block.getFieldValue("GPIO_INDEX");
-    const code = `R.gpio[${number_gpio_index}].digital`;
+    const code = `I.gpio[${number_gpio_index}].digital`;
     return [code, Blockly.Python.ORDER_NONE];
   };
 
   Blockly.Python["gpio_read_analog"] = function (block) {
     const number_gpio_index = block.getFieldValue("GPIO_INDEX");
-    const code = `R.gpio[${number_gpio_index}].analog`;
+    const code = `I.gpio[${number_gpio_index}].analog`;
     return [code, Blockly.Python.ORDER_NONE];
   };
 }
@@ -449,13 +449,13 @@ function loadVisionBlocks(Blockly) {
   };
 
   Blockly.Python["vision_see"] = function (block) {
-    const code = `R.see()`;
+    const code = `C.capture()`;
     return [code, Blockly.Python.ORDER_NONE];
   };
 
   Blockly.Python["vision_camera_res"] = function (block) {
     const dropdown_vision_resolution = block.getFieldValue("VISION_RESOLUTION");
-    return `R.camera.res = ${dropdown_vision_resolution}\n`;
+    return `C.camera.res = ${dropdown_vision_resolution}\n`;
   };
 
   Blockly.Python["vision_distance_to"] = function (block) {
