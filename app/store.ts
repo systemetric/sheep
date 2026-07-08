@@ -246,7 +246,13 @@ export default new Vuex.Store<State>({
     },
     status: {
       statusColour: "#ff2500",
-      statuses: {},
+      statuses: {
+        "shepherd-app": "unknown",
+        "shepherd-watch": "unknown",
+        "shepherd-ws": "unknown",
+        "shepherd-run": "unknown",
+        "hopper": "unknown"
+      },
     },
     statusOpen: false,
     sockets: {
