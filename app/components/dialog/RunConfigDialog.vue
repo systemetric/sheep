@@ -22,7 +22,7 @@
         </label>
       </fieldset>
 
-      <fieldset>
+      <fieldset style="margin-bottom: 1em">
         <legend>Misc</legend>
         <input
           type="file"
@@ -32,6 +32,32 @@
           @change="imageChanged"
         />
         <button @click="uploadTeamLogo">Upload Team Logo</button>
+      </fieldset>
+
+      <hr style="margin-bottom: 1em" />
+
+      <p style="margin-bottom: 1em">
+        The following options only affect the <b>current project</b>
+      </p>
+
+      <fieldset :class="{ disabled: !hasProject }">
+        <legend>Attributes</legend>
+        <div>
+          <table>
+            <tr style="font-weight: bold">
+              <td>Key</td>
+              <td>Value</td>
+            </tr>
+            <tr v-for="[key, val] of meta" :key="key">
+              <td>
+                {{ key }}
+              </td>
+              <td>
+                {{ val }}
+              </td>
+            </tr>
+          </table>
+        </div>
       </fieldset>
     </div>
     <template slot="actions">
@@ -62,6 +88,18 @@ export default Vue.extend({
           : "dev",
       zones: ["red", "yellow", "green", "blue"],
     };
+  },
+  computed: {
+    hasProject() {
+      return this.$store.state.currentProject !== undefined;
+    },
+    meta() {
+      return this.$store.state.currentProject === undefined
+        ? []
+        : Object.entries(this.$store.state.currentProject.meta).filter(
+            (m) => m[0] !== "project_name",
+          );
+    },
   },
   methods: {
     submitAndClose() {
@@ -96,6 +134,37 @@ fieldset {
 
   legend {
     padding: 0 0.25em;
+  }
+
+  table,
+  tr,
+  td {
+    border: 1px solid #aaa;
+    padding: 5px;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #222;
+  }
+
+  tr:nth-child(even) {
+    background-color: #333;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+}
+
+fieldset.disabled {
+  border-color: #666;
+  color: #666;
+
+  table,
+  tr,
+  td {
+    border: 1px solid #666;
   }
 }
 </style>
