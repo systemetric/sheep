@@ -36,6 +36,7 @@ export interface Project {
   content: string | null;
   lastSaveContent?: string;
   blocklyGenerated?: string;
+  meta: Record<string, string>;
 }
 
 /**This is for the projects retreived from the server initally to display the
@@ -91,11 +92,11 @@ export const EXPECTED_SERVICES = [
   "shepherd-ws",
 ];
 export const SERVICE_NOTES = {
+  hopper: "Logs and images",
   "shepherd-app": "Web interface",
   "shepherd-run": "Code runner",
   "shepherd-watch": "Status information",
   "shepherd-ws": "Logs and images",
-  hopper: "Logs and images",
 };
 
 export interface StatusSummary {
@@ -247,11 +248,11 @@ export default new Vuex.Store<State>({
     status: {
       statusColour: "#ff2500",
       statuses: {
+        hopper: "unknown",
         "shepherd-app": "unknown",
+        "shepherd-run": "unknown",
         "shepherd-watch": "unknown",
         "shepherd-ws": "unknown",
-        "shepherd-run": "unknown",
-        "hopper": "unknown"
       },
     },
     statusOpen: false,
@@ -280,6 +281,7 @@ export default new Vuex.Store<State>({
           filename: f,
           name: _.startCase(f.substring(0, f.lastIndexOf("."))),
           content: null,
+          meta: {},
         }));
       state.projects.sort(compareProjects);
       state.blocksConfiguration = res.blocks;
@@ -300,6 +302,29 @@ export default new Vuex.Store<State>({
           .then((res) => res.json())
           .then((res: any) => res.content);
       }
+
+      // regex for metadata line
+      // #::sheep:KEY:VAL
+      const mp = /^#::sheep:([^:]+):([^:]+)/m;
+      const lines = newProject.content.split(/\r?\n/);
+      const nm = lines.findIndex((l) => !mp.test(l));
+
+      for (const l of nm === -1 ? lines : lines.slice(0, nm)) {
+        const r = l.match(mp);
+
+        if (r === null) continue;
+
+        const k = r[1];
+        const v = r[2];
+
+        newProject.meta[k] = v;
+      }
+
+      newProject.meta["project_name"] = newProject.name;
+
+      // remove meta lines from display
+      const rest = nm === -1 ? "" : lines.slice(nm).join("\n");
+      newProject.content = rest;
 
       if (!state.openProjects.find(findProject))
         state.openProjects.push(newProject);
@@ -632,10 +657,17 @@ export default new Vuex.Store<State>({
           }
         }
 
+        let meta = [];
+        for (const [k, v] of Object.entries(foundProject.meta)) {
+          meta.push(`#::sheep:${k}:${v}`);
+        }
+
+        const content = `${meta.join("\n")}\n` + foundProject.content;
+
         commit(MUTATION_SET_SAVING, true);
         return fetch(`/files/save/${foundProject.filename}`, {
           method: "POST",
-          body: foundProject.content,
+          body: content,
         }).then((res) => {
           setTimeout(() => {
             commit(MUTATION_MARK_PROJECT_SAVED, filename);
@@ -703,6 +735,9 @@ export default new Vuex.Store<State>({
       const project: Project = {
         name: name,
         filename: filename,
+        meta: {
+          project_name: name,
+        },
         content:
           loadContent ||
           (type === "python"
@@ -758,6 +793,11 @@ export default new Vuex.Store<State>({
         const filename = state.currentProject.filename;
         const zip = new JSZip();
 
+        let meta = [];
+        for (const [k, v] of Object.entries(state.currentProject.meta)) {
+          meta.push(`#::sheep:${k}:${v}`);
+        }
+
         let filesToPack: Project[] = [];
         if (state.currentProject.filename.endsWith(".xml")) {
           const blocksConfiguration: BlocksConfiguration =
@@ -769,7 +809,7 @@ export default new Vuex.Store<State>({
             };
 
           const content =
-            `#::sheep:project_name:${state.currentProject.name}\n` +
+            `${meta.join("\n")}\n` +
             (state.currentProject.blocklyGenerated || "");
 
           zip.file("main.py", content);
@@ -780,9 +820,7 @@ export default new Vuex.Store<State>({
               blocksConfiguration.requires.includes(project.filename),
           );
         } else {
-          const content =
-            `#::sheep:project_name:${state.currentProject.name}\n` +
-            state.currentProject.content;
+          const content = `${meta.join("\n")}\n` + state.currentProject.content;
           zip.file("main.py", content);
 
           filesToPack = state.projects.filter(
