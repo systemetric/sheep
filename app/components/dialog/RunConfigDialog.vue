@@ -26,12 +26,20 @@
         <legend>Misc</legend>
         <input
           type="file"
-          ref="file"
+          ref="imageFile"
           accept=".jpg"
           style="display: none"
-          @change="imageChanged"
+          @change="imageUpload"
         />
         <button @click="uploadTeamLogo">Upload Team Logo</button>
+        <input
+          type="file"
+          ref="patchFile"
+          accept=".zip"
+          style="display: none"
+          @change="patchUpload"
+        />
+        <button @click="uploadPatch">Upload Patch</button>
       </fieldset>
     </div>
     <template slot="actions">
@@ -46,6 +54,7 @@ import {
   MUTATION_SET_RUN_CONFIG,
   RunConfiguration,
   ACTION_UPLOAD_TEAM_LOGO,
+  ACTION_UPLOAD_PATCH,
 } from "@/store";
 
 export default Vue.extend({
@@ -71,16 +80,29 @@ export default Vue.extend({
       } as RunConfiguration);
       this.$emit("close");
     },
-    imageChanged() {
-      const team_logo_file = (this.$refs as any).file.files[0];
+    imageUpload() {
+      const team_logo_file = (this.$refs as any).imageFile.files[0];
       if (!team_logo_file) return;
 
-      console.log(`Uploading ${team_logo_file.name}...`);
+      console.log(`Uploading team image ${team_logo_file.name}...`);
 
       this.$store.dispatch(ACTION_UPLOAD_TEAM_LOGO, team_logo_file);
+      this.$emit("close");
+    },
+    patchUpload() {
+      const patch_file = (this.$refs as any).patchFile.files[0];
+      if (!patch_file) return;
+
+      console.log(`Uploading patch ${patch_file.name}...`);
+
+      this.$store.dispatch(ACTION_UPLOAD_PATCH, patch_file);
+      this.$emit("close");
     },
     uploadTeamLogo() {
-      (this.$refs as any).file.click();
+      (this.$refs as any).imageFile.click();
+    },
+    uploadPatch() {
+      (this.$refs as any).patchFile.click();
     },
   },
 });

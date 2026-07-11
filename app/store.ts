@@ -95,7 +95,7 @@ export const SERVICE_NOTES = {
   "shepherd-run": "Code runner",
   "shepherd-watch": "Status information",
   "shepherd-ws": "Logs and images",
-  hopper: "Logs and images",
+  "hopper": "Logs and images",
 };
 
 export interface StatusSummary {
@@ -168,6 +168,7 @@ export const ACTION_INIT_CAMERA_WEBSOCKET = "INIT_CAMERA_WEBSOCKET";
 export const ACTION_INIT_LOG_WEBSOCKET = "INIT_LOG_WEBSOCKET";
 export const ACTION_INIT_STATUS_WEBSOCKET = "INIT_STATUS_WEBSOCKET";
 export const ACTION_UPLOAD_TEAM_LOGO = "UPLOAD_TEAM_LOGO";
+export const ACTION_UPLOAD_PATCH = "UPLOAD_PATCH";
 
 // Messages which can be displayed to the user
 const MESSAGE_RUN = "RUN";
@@ -251,7 +252,7 @@ export default new Vuex.Store<State>({
         "shepherd-watch": "unknown",
         "shepherd-ws": "unknown",
         "shepherd-run": "unknown",
-        "hopper": "unknown"
+        hopper: "unknown",
       },
     },
     statusOpen: false,
@@ -585,6 +586,17 @@ export default new Vuex.Store<State>({
       formData.append("team-image.jpg", file);
 
       return fetch("/upload/team-image", {
+        method: "POST",
+        body: formData,
+      });
+    },
+
+    /**Upload a patch file*/
+    [ACTION_UPLOAD_PATCH]({ state }, file: File) {
+      const formData = new FormData();
+      formData.append("patch.zip", file);
+
+      return fetch("/patch/upload", {
         method: "POST",
         body: formData,
       });
