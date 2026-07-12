@@ -95,7 +95,7 @@ export const SERVICE_NOTES = {
   "shepherd-run": "Code runner",
   "shepherd-watch": "Status information",
   "shepherd-ws": "Logs and images",
-  "hopper": "Logs and images",
+  hopper: "Logs and images",
 };
 
 export interface StatusSummary {
@@ -175,6 +175,8 @@ const MESSAGE_RUN = "RUN";
 const MESSAGE_STOP = "STOP";
 const MESSAGE_SAVED = "SAVED";
 const MESSAGE_JSON_ERROR = "JSON_ERROR";
+const MESSAGE_TEAM_IMAGE = "TEAM_IMAGE";
+const MESSAGE_PATCH = "PATCH";
 
 // Create a promise which resolves after a certain time
 export function wait(time: number): Promise<number> {
@@ -584,24 +586,54 @@ export default new Vuex.Store<State>({
     },
 
     /**Upload a new team logo image*/
-    [ACTION_UPLOAD_TEAM_LOGO]({ state }, file: File) {
+    [ACTION_UPLOAD_TEAM_LOGO]({ state, dispatch }, file: File) {
       const formData = new FormData();
       formData.append("team-image.jpg", file);
 
-      return fetch("/upload/team-image", {
+      fetch("/upload/team-image", {
         method: "POST",
         body: formData,
+      }).then((resp) => {
+        if (!resp.ok) {
+          console.error(resp);
+          dispatch(ACTION_SHOW_MESSAGE, {
+            id: MESSAGE_TEAM_IMAGE,
+            message: "Failed to upload team image, check console for details.",
+            icon: "exclamation-circle",
+          });
+        } else {
+          dispatch(ACTION_SHOW_MESSAGE, {
+            id: MESSAGE_TEAM_IMAGE,
+            message: "Team image uploaded",
+            icon: "info-circle",
+          });
+        }
       });
     },
 
     /**Upload a patch file*/
-    [ACTION_UPLOAD_PATCH]({ state }, file: File) {
+    [ACTION_UPLOAD_PATCH]({ state, dispatch }, file: File) {
       const formData = new FormData();
       formData.append("patch.zip", file);
 
-      return fetch("/patch/upload", {
+      fetch("/patch/upload", {
         method: "POST",
         body: formData,
+      }).then((resp) => {
+        if (!resp.ok) {
+          console.error(resp);
+          dispatch(ACTION_SHOW_MESSAGE, {
+            id: MESSAGE_PATCH,
+            message: "Failed to upload patch, check console for details.",
+            icon: "exclamation-circle",
+          });
+        } else {
+          dispatch(ACTION_SHOW_MESSAGE, {
+            id: MESSAGE_PATCH,
+            message: "Patching robot...",
+            icon: "info-circle",
+          });
+        }
       });
     },
 
