@@ -461,16 +461,19 @@ export default new Vuex.Store<State>({
 
     [MUTATION_HANDLE_LOG_WEBSOCKET_MESSAGE](state: State, data: string) {
       // Handle the erase escape sequence from the server
-      if (data.includes("\x1b[2J")) {
-        state.textLog = data.slice(data.indexOf("\x1b[2J") + 4);
+      // shepherd-ws guarantees this will be sent as a single message
+      // in this exact format
+      if (data === "\x1b[2J") {
+        state.textLog = "";
         return;
       }
 
       if (state.textLog !== data) {
+        const d = data.trim();
         if (state.textLogOutputState == 0) {
-          if (data.trim() === "") state.textLogOutputState = 1;
+          if (d === "") state.textLogOutputState = 1;
         } else if (state.textLogOutputState == 1) {
-          if (data.trim() !== "") state.textLogOutputState = 2;
+          if (d !== "") state.textLogOutputState = 2;
         }
       }
       state.textLog += data;

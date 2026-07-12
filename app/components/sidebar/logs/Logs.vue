@@ -38,19 +38,20 @@ import {
   MUTATION_SET_RUN_CONFIG_OPEN,
 } from "../../../store";
 import IconButton from "@/components/IconButton.vue";
+import throttle from "lodash/throttle";
 
 export default Vue.extend({
   name: "logs",
   computed: mapState(["running", "currentProject", "textLog"]),
   watch: {
-    textLog() {
+    '$store.state.textLog': throttle(function (_) {
       this.$nextTick(() => {
         const wrapper = this.$refs.logsWrapper as HTMLElement;
         if (wrapper) {
           wrapper.scrollTop = wrapper.scrollHeight - wrapper.clientHeight;
         }
       });
-    },
+    }, 250),
   },
   methods: {
     run(e: MouseEvent) {
