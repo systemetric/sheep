@@ -44,7 +44,7 @@ export default Vue.extend({
   name: "logs",
   computed: mapState(["running", "currentProject", "textLog"]),
   watch: {
-    '$store.state.textLog': throttle(function (_) {
+    "$store.state.textLog": throttle(function (_) {
       this.$nextTick(() => {
         const wrapper = this.$refs.logsWrapper as HTMLElement;
         if (wrapper) {
