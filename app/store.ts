@@ -140,7 +140,7 @@ const MUTATION_CREATE_PROJECT = "CREATE_PROJECT";
 const MUTATION_DELETE_PROJECT = "DELETE_PROJECT";
 const MUTATION_SET_RUNNING = "SET_RUNNING";
 const MUTATION_SET_SAVING = "SET_SAVING";
-const MUTATION_MARK_PROJECT_SAVED = "MARK_SAVED";
+export const MUTATION_MARK_PROJECT_SAVED = "MARK_SAVED";
 export const MUTATION_SET_CREATE_OPEN = "SET_CREATE_OPEN";
 export const MUTATION_SHOW_UPLOAD_DIALOG = "SHOW_UPLOAD_DIALOG";
 const MUTATION_SHOW_MESSAGE = "SHOW_MESSAGE";
@@ -629,8 +629,6 @@ export default new Vuex.Store<State>({
         (project) => project.filename === filename,
       );
       if (foundProject) {
-        if (foundProject.content === foundProject.lastSaveContent) return;
-
         if (foundProject.filename.endsWith(".json")) {
           let parsed;
           try {

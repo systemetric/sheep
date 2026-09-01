@@ -47,6 +47,7 @@
             <tr style="font-weight: bold">
               <td>Key</td>
               <td>Value</td>
+              <td></td>
             </tr>
             <tr v-for="[key, val] of meta" :key="key">
               <td>
@@ -54,6 +55,30 @@
               </td>
               <td>
                 {{ val }}
+              </td>
+              <td>
+                <button @click="deleteKey(key)">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  type="text"
+                  v-model="add_key"
+                  placeholder="Key"
+                  :disabled="!hasProject"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  v-model="add_value"
+                  placeholder="Value"
+                  :disabled="!hasProject"
+                />
+              </td>
+              <td>
+                <button @click="addKey" :disabled="!hasProject">Add</button>
               </td>
             </tr>
           </table>
@@ -72,6 +97,8 @@ import {
   MUTATION_SET_RUN_CONFIG,
   RunConfiguration,
   ACTION_UPLOAD_TEAM_LOGO,
+  ACTION_SAVE_PROJECT,
+  MUTATION_MARK_PROJECT_SAVED,
 } from "@/store";
 
 export default Vue.extend({
@@ -87,6 +114,8 @@ export default Vue.extend({
           ? this.$store.state.runConfig.mode
           : "dev",
       zones: ["red", "yellow", "green", "blue"],
+      add_key: "",
+      add_value: "",
     };
   },
   computed: {
@@ -107,6 +136,8 @@ export default Vue.extend({
         zone: this.zone,
         mode: this.mode,
       } as RunConfiguration);
+      this.add_key = "";
+      this.add_value = "";
       this.$emit("close");
     },
     imageChanged() {
@@ -119,6 +150,48 @@ export default Vue.extend({
     },
     uploadTeamLogo() {
       (this.$refs as any).file.click();
+    },
+    deleteKey(key) {
+      if (this.$store.state.currentProject) {
+        Vue.delete(this.$store.state.currentProject.meta, key);
+        this.$store.dispatch(ACTION_SAVE_PROJECT, null);
+      }
+    },
+    addKey() {
+      this.add_key = this.add_key.trim();
+      this.add_value = this.add_value.trim();
+
+      if (
+        this.add_key == "" ||
+        this.add_value == "" ||
+        this.add_key.includes(":") ||
+        this.add_value.includes(":")
+      ) {
+        console.error(
+          `invalid value for (key,value) = (${this.add_key},${this.add_value})`,
+        );
+        return;
+      }
+
+      if (this.$store.state.currentProject) {
+        if (this.add_key in this.$store.state.currentProject.meta) {
+          this.$store.state.currentProject.meta = Object.assign(
+            {},
+            this.$store.state.currentProject.meta,
+            { [this.add_key]: this.add_value },
+          );
+        } else {
+          Vue.set(
+            this.$store.state.currentProject.meta,
+            this.add_key,
+            this.add_value,
+          );
+        }
+        this.$store.dispatch(ACTION_SAVE_PROJECT, null);
+      }
+
+      this.add_key = "";
+      this.add_value = "";
     },
   },
 });
