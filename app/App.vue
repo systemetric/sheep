@@ -32,7 +32,6 @@
       />
       <PictureDialog @close="closePicture" v-show="pictureOpen" />
       <RunConfigDialog @close="closeRunConfig" v-show="runConfigOpen" />
-      <StatusDialog @close="closeStatus" v-show="statusOpen" />
     </template>
     <div v-else class="empty-state">
       <FontAwesomeIcon :icon="['fas', 'exclamation-triangle']" size="10x" />

@@ -36,7 +36,6 @@
         <FontAwesomeIcon :icon="['fas', 'trash']" />
       </IconButton>
     </ProjectTab>
-    <Status class="status-footer" />
   </div>
 </template>
 
